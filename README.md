@@ -40,6 +40,11 @@ johnburbridge_com/
    ```
    npm run lint
    ```
+   
+3. Validate workflows (requires Homebrew):
+   ```
+   ./validate-workflows.sh
+   ```
 
 ## Deployment Options
 
@@ -64,6 +69,11 @@ This project uses GitHub Actions for CI/CD with semantic versioning:
    - Updates version.txt file
    - Creates a new git tag in format `vMAJOR.MINOR.PATCH`
    - Pushes tag and version changes
+   
+4. **Validation Workflow**:
+   - Validates workflow files with actionlint
+   - Runs automatically when workflow files change
+   - Catches syntax errors and best practice issues
 
 ### Running Locally with Docker
 
