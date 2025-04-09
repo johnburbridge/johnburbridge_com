@@ -14,21 +14,13 @@ jobs:
     permissions:
       contents: read
       packages: write
+      # Needed for docker inspect to read image labels
+      actions: read 
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get semantic version
-        id: semver
-        run: |
-          # Get most recent tag
-          LATEST_TAG=$(git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*" 2>/dev/null || echo "v0.1.0")
-          VERSION="${LATEST_TAG#v}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        # No need for fetch-depth: 0 anymore, not using git describe here
 
       - name: Get PR number from commit
         id: pr
@@ -38,10 +30,17 @@ jobs:
             echo "PR_NUMBER=${PR_NUMBER}" >> $GITHUB_ENV
             echo "pr_number=${PR_NUMBER}" >> $GITHUB_OUTPUT
           else
-            echo "No PR number found in commit message"
-            exit 1
+            # If it's not a merge commit, try to get the latest tag for release creation
+            echo "Not a PR merge commit. Trying to get latest tag."
+            LATEST_TAG=$(git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*" 2>/dev/null || echo "v0.1.0")
+            VERSION="${LATEST_TAG#v}"
+            echo "VERSION=${VERSION}" >> $GITHUB_ENV
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            # Set PR_NUMBER to empty so subsequent steps might skip or adapt
+            echo "PR_NUMBER=" >> $GITHUB_ENV 
+            echo "pr_number=" >> $GITHUB_OUTPUT
           fi
-
+          
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -49,14 +48,35 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull dev image and retag as release
+      - name: Pull pr-latest, Inspect, Retag, and Push Release
+        # Only run if we found a PR number (meaning it was a merge)
+        if: env.PR_NUMBER != ''
         run: |
-          # Pull the dev image that was built during PR
-          DEV_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-dev.pr${{ env.PR_NUMBER }}"
-          RELEASE_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}"
+          PR_LATEST_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-latest"
+          
+          echo "Pulling ${PR_LATEST_IMAGE} to inspect its version label..."
+          docker pull ${PR_LATEST_IMAGE}
+          
+          # Inspect the image to get the exact dev version label set by the PR workflow
+          DEV_VERSION=$(docker inspect --format='{{ index .Config.Labels \"org.opencontainers.image.version\" }}' ${PR_LATEST_IMAGE})
+          if [ -z "$DEV_VERSION" ]; then
+            echo "Error: Could not find version label 'org.opencontainers.image.version' on ${PR_LATEST_IMAGE}"
+            exit 1
+          fi
+          echo "Found development version label: ${DEV_VERSION}"
+          
+          # Extract the base version (e.g., 1.2.3 from 1.2.3-dev.pr42)
+          BASE_VERSION=$(echo "$DEV_VERSION" | sed -E 's/-dev\\.pr[0-9]+$//')
+          echo "Extracted base version: ${BASE_VERSION}"
+          echo "BASE_VERSION=${BASE_VERSION}" >> $GITHUB_ENV
+          
+          # Define image tags using the extracted versions
+          DEV_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${DEV_VERSION}"
+          RELEASE_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${BASE_VERSION}"
           LATEST_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
           
-          echo "Pulling development image: ${DEV_IMAGE}"
+          # Pull the specific dev image (might already be cached from pr-latest pull)
+          echo "Pulling specific development image: ${DEV_IMAGE}"
           docker pull ${DEV_IMAGE}
           
           echo "Tagging and pushing release image: ${RELEASE_IMAGE}"
@@ -67,13 +87,23 @@ jobs:
           docker tag ${DEV_IMAGE} ${LATEST_IMAGE}
           docker push ${LATEST_IMAGE}
           
-          echo "Release completed successfully"
+          echo "Release completed successfully for PR #${{ env.PR_NUMBER }}"
+        
+      - name: Set Version for Non-PR Push
+        # Only run if we did NOT find a PR number (e.g., direct push)
+        if: env.PR_NUMBER == ''
+        run: |
+          # Use the VERSION extracted from the tag in the 'Get PR number' step
+          echo "Setting release version from latest tag: ${{ env.VERSION }}"
+          # Set BASE_VERSION so the release step works consistently
+          echo "BASE_VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
 
       - name: Create GitHub Release
+        # Always run, but uses BASE_VERSION which is set differently depending on PR merge or direct push
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ env.VERSION }}
-          name: Release v${{ env.VERSION }}
-          generate_release_notes: true
+          tag_name: v${{ env.BASE_VERSION }} # Use BASE_VERSION derived from label or tag
+          name: Release v${{ env.BASE_VERSION }}
+          generate_release_notes: true 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,8 +1,6 @@
 {
   "extends": "stylelint-config-standard",
   "rules": {
-    "indentation": 4,
-    "color-hex-case": "lower",
     "selector-class-pattern": null
   }
 }
