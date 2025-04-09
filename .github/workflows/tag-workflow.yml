@@ -1,0 +1,77 @@
+name: Tag New Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Type of version bump (major, minor, patch)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current version
+        id: current_version
+        run: |
+          # Get most recent tag or use default
+          LATEST_TAG=$(git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*" 2>/dev/null || echo "v0.1.0")
+          echo "Current version: ${LATEST_TAG}"
+          echo "LATEST_TAG=${LATEST_TAG#v}" >> $GITHUB_ENV
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          # Parse current version
+          IFS='.' read -r major minor patch <<< "$LATEST_TAG"
+          
+          # Ensure values are treated as integers
+          major=${major:-0}
+          minor=${minor:-0}
+          patch=${patch:-0}
+          
+          # Bump version based on input
+          if [ "${{ github.event.inputs.version_type }}" == "major" ]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+          elif [ "${{ github.event.inputs.version_type }}" == "minor" ]; then
+            minor=$((minor + 1))
+            patch=0
+          else
+            patch=$((patch + 1))
+          fi
+          
+          # Set new version
+          NEW_VERSION="$major.$minor.$patch"
+          echo "New version: v${NEW_VERSION}"
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Update version in file
+        run: |
+          echo "$NEW_VERSION" > version.txt
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add version.txt
+          git commit -m "Bump version to $NEW_VERSION"
+          
+      - name: Create and push tag
+        run: |
+          git tag -a "v$NEW_VERSION" -m "Version $NEW_VERSION"
+          git push origin "v$NEW_VERSION"
+          git push
