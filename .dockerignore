@@ -1,0 +1,14 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# README and documentation
+README.md
+
+# Build instructions (if any are added later)
+build.sh
