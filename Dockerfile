@@ -1,13 +1,10 @@
 FROM nginx:alpine
 
 # Copy website files to Nginx serve directory
-COPY . /usr/share/nginx/html/
-
-# Remove the Dockerfile from the copied content
-RUN rm /usr/share/nginx/html/Dockerfile
+COPY site/ /usr/share/nginx/html/
 
 # Configure Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY config/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 8080
 EXPOSE 8080
