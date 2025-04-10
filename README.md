@@ -17,97 +17,128 @@ johnburbridge_com/
 ├── .dockerignore          # Files to exclude from Docker build
 ├── .eslintrc.json         # JavaScript linting configuration
 ├── .htmlvalidate.json     # HTML validation configuration
+├── .releaserc.json        # Semantic Release configuration
 ├── .stylelintrc.json      # CSS linting configuration
+├── CHANGELOG.md           # Automatically generated release notes
 ├── Dockerfile             # Docker configuration for building container
 ├── package.json           # Node.js dependencies and scripts
-└── version.txt            # Current version of the website
+├── package-lock.json      # Node.js locked dependencies
+└── version.txt            # Deprecated - Version is now in package.json & Git tags
 ```
 
 ## Development
 
 ### Prerequisites
-- Node.js 16+
+- Node.js 20+
 - Docker (for local container testing)
 - Git
 
 ### Local Development
 1. Install dependencies:
-   ```
-   npm install
+   ```bash
+   npm ci
    ```
 
 2. Lint code:
-   ```
+   ```bash
    npm run lint
    ```
    
-3. Validate workflows (requires Homebrew):
-   ```
+3. Validate workflows (requires Homebrew and act):
+   ```bash
+   # brew install act actionlint
    ./validate-workflows.sh
+   # Test individual workflows locally (see .github/event_samples/)
+   # act pull_request -e .github/event_samples/pull_request_event.json | cat
    ```
 
-## Deployment Options
+## Development Workflow & Conventional Commits
 
-### CI/CD Pipeline
-This project uses GitHub Actions for CI/CD with semantic versioning:
+This project uses an automated release process powered by [Semantic Release](https://semantic-release.gitbook.io/) and [Conventional Commits](https://www.conventionalcommits.org/).
 
-1. **Pull Request Workflow**:
-   - Lints code and reports issues
-   - Builds a container image with tag format: `MAJOR.MINOR.PATCH-dev.prN` 
-   - Pushes to GitHub Container Registry
-   - Comments on PR with image details and version
+1.  **Feature Development:** Create a new branch for your feature or fix (`git checkout -b feature/my-new-feature`).
+2.  **Make Changes:** Implement your changes.
+3.  **Commit Changes:** Commit your work using the **Conventional Commits** format. This is crucial for automated versioning.
+    *   Examples:
+        *   `feat: Add dark mode toggle` (Results in a MINOR release)
+        *   `fix: Correct alignment issue on mobile` (Results in a PATCH release)
+        *   `perf: Optimize image loading` (Results in a PATCH release)
+        *   `docs: Update README with deployment instructions` (No release)
+        *   `chore: Update dependencies` (No release)
+        *   `feat!: Add user authentication` (Note the `!`. Results in a MAJOR release)
+        *   `fix: Solve login bug
+           
+           BREAKING CHANGE: User session format changed.` (Results in a MAJOR release)
+4.  **Create Pull Request:** Open a Pull Request against the `main` branch.
+5.  **CI Checks:** The PR workflow will automatically:
+    *   Run linters (HTML, CSS, JS).
+    *   Build a Docker image tagged as `pr-{PR_NUMBER}`.
+    *   Push the image to GitHub Container Registry (ghcr.io).
+    *   Comments on PR with instructions to pull the test image.
+6.  **Code Review & Merge:** Once the PR is approved and merged into `main`...
+7.  **Automated Release:** The Main workflow triggers:
+    *   `semantic-release` analyzes the conventional commit messages merged since the last release.
+    *   If release-worthy commits (`feat`, `fix`, `perf`, `!` or `BREAKING CHANGE`) are found:
+        *   Calculates the next semantic version (e.g., `1.2.3`).
+        *   Updates `package.json` version.
+        *   Updates `CHANGELOG.md`.
+        *   Commits these changes with `[skip ci]`.
+        *   Creates a Git tag (e.g., `v1.2.3`).
+        *   Creates a GitHub Release with generated notes.
+        *   Pulls the `pr-{PR_NUMBER}` image associated with the merge commit.
+        *   Retags the image with the new version (`1.2.3`) and `latest`.
+        *   Pushes the release tags to ghcr.io.
+    *   If no release-worthy commits are found, no release occurs.
 
-2. **Main Branch Workflow**:
-   - Triggered after PR is merged to main
-   - Takes the dev container from PR
-   - Retags it as a release with format: `MAJOR.MINOR.PATCH`
-   - Also tags as `latest`
-   - Creates a GitHub release
+**Key Takeaway:** Use Conventional Commit messages when committing code that will be merged into `main`. This drives the entire automated release process.
 
-3. **Versioning Workflow**:
-   - Manually triggered to bump version (major, minor, patch)
-   - Updates version.txt file
-   - Creates a new git tag in format `vMAJOR.MINOR.PATCH`
-   - Pushes tag and version changes
-   
-4. **Validation Workflow**:
-   - Validates workflow files with actionlint
-   - Runs automatically when workflow files change
-   - Catches syntax errors and best practice issues
+## CI/CD Pipeline (Summary)
 
-### Running Locally with Docker
+This project uses GitHub Actions for CI/CD with semantic versioning automated by Semantic Release:
 
-1. Build the Docker image:
-   ```
-   docker build -t johnburbridge-site .
-   ```
+1.  **PR Workflow (`pr-workflow.yml`)**: Triggered on Pull Requests to `main`.
+    *   Lints code (fails build on errors).
+    *   Builds a container image tagged `pr-{PR_NUMBER}`.
+    *   Pushes to GitHub Container Registry.
+    *   Comments on PR with image details.
 
-2. Run the container:
-   ```
-   docker run -d -p 8080:8080 johnburbridge-site
-   ```
+2.  **Release Workflow (`main-workflow.yml`)**: Triggered on pushes to `main`.
+    *   Runs `semantic-release` to analyze commits, bump version, generate changelog, commit changes, create Git tag, and create GitHub Release (if applicable).
+    *   If a new release was created, retags the corresponding `pr-{PR_NUMBER}` image as the new semantic version (e.g., `1.2.3`) and `latest`, pushing them to GitHub Container Registry.
 
-3. Access the website at http://localhost:8080
+3.  **Validation Workflow (`validate.yml`)**: Triggered on pushes affecting `.github/workflows/**` (except on `main`).
+    *   Validates workflow files with `actionlint`.
 
-### Production Deployment
-The container is published to GitHub Container Registry with semantic versioning (following SemVer principles) and can be deployed to any container platform:
+## Running Locally with Docker
+
+1.  Build the Docker image:
+    ```bash
+    docker build -t johnburbridge-site .
+    ```
+
+2.  Run the container:
+    ```bash
+    docker run -d -p 8080:8080 johnburbridge-site
+    ```
+
+3.  Access the website at `http://localhost:8080`
+
+## Production Deployment
+
+The container is published to GitHub Container Registry (`ghcr.io/johnburbridge/johnburbridge-site`) with semantic version tags created automatically by the CI/CD pipeline. Use these tags for deployment:
 
 ```bash
-# Using the stable latest version
+# Using the stable latest version (points to the most recent release)
 docker pull ghcr.io/johnburbridge/johnburbridge-site:latest
 docker run -d -p 8080:8080 ghcr.io/johnburbridge/johnburbridge-site:latest
 
-# Using a specific semantic version (recommended for production)
+# Using a specific semantic version (RECOMMENDED for production stability)
 docker pull ghcr.io/johnburbridge/johnburbridge-site:1.2.3
 docker run -d -p 8080:8080 ghcr.io/johnburbridge/johnburbridge-site:1.2.3
 
-# Using a development version from a PR
-docker pull ghcr.io/johnburbridge/johnburbridge-site:1.2.3-dev.pr42
-docker run -d -p 8080:8080 ghcr.io/johnburbridge/johnburbridge-site:1.2.3-dev.pr42
+# Using a development version from a PR (for testing)
+docker pull ghcr.io/johnburbridge/johnburbridge-site:pr-42
+docker run -d -p 8080:8080 ghcr.io/johnburbridge/johnburbridge-site:pr-42
 ```
 
-The versioning scheme follows standard semantic versioning:
-- `MAJOR.MINOR.PATCH` for production releases (e.g., `1.2.3`)
-- `MAJOR.MINOR.PATCH-dev.prNUMBER` for PR builds (e.g., `1.2.3-dev.pr42`)
-
-The version is controlled via git tags, which can be created using the "Tag New Version" GitHub workflow.
+Releases and versioning are handled automatically based on Conventional Commits merged into the `main` branch.
