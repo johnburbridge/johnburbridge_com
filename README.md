@@ -1,5 +1,9 @@
 # John Burbridge - Personal Website
 
+[![Release Workflow Status](https://github.com/johnburbridge/johnburbridge_com/actions/workflows/main-workflow.yml/badge.svg?branch=main)](https://github.com/johnburbridge/johnburbridge_com/actions/workflows/main-workflow.yml)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/johnburbridge/johnburbridge_com?sort=semver)](https://github.com/johnburbridge/johnburbridge_com/releases/latest)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
+
 ## Overview
 This repository contains the personal website for John Burbridge, a DevEx Engineering Consultant and founder of Spiral House.
 
