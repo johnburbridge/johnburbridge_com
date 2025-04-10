@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
     git \
     sudo \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js 20.x
