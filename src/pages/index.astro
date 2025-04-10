@@ -1,148 +1,178 @@
 ---
 // src/pages/index.astro
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Get the 5 most recent blog posts
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 5);
 ---
 <BaseLayout title="John Burbridge | Developer Experience Consulting">
     <!-- Content from the original site/index.html <body> tag -->
     <div class="container">
-        <header>
-            <nav>
-                <a href="#about">About</a>
-                <a href="#expertise">Expertise</a>
-                <a href="#experience">Experience</a>
-                <a href="#contact">Contact</a>
-            </nav>
-        </header>
+        <!-- Header removed, moved to BaseLayout.astro -->
 
-        <main>
-            <section class="hero" id="hero">
-                <div class="hero-content">
-                    <h1>John Burbridge</h1>
-                    <h2>Developer Experience (DevEx) Consultant</h2>
-                    <p class="tagline">Transforming developer workflows and productivity through automation and
-                        infrastructure excellence</p>
-                    <div class="cta-buttons">
-                        <a href="#contact" class="cta-primary">Get in Touch</a>
-                        <a href="#expertise" class="cta-secondary">Learn More</a>
-                    </div>
+        <section class="hero" id="hero">
+            <div class="hero-content">
+                <h1>John Burbridge</h1>
+                <h2>Developer Experience (DevEx) Consultant</h2>
+                <p class="tagline">Transforming developer workflows and productivity through automation and
+                    infrastructure excellence</p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="cta-primary">Get in Touch</a>
+                    <a href="#expertise" class="cta-secondary">Learn More</a>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section id="about" class="section">
-                <h2 class="section-title">About</h2>
-                <div class="about-content">
-                    <div class="profile-image">
-                         <!-- Update image path to point to public dir -->
-                        <img src="/profile.jpeg" alt="John Burbridge Profile Photo">
-                    </div>
-                    <div class="about-text">
-                        <p>I'm an engineering leader with 25+ years of experience transforming software development
-                            practices. Based in Oakland, CA, I specialize in maximizing developer productivity through
-                            optimized workflows, infrastructure, and tooling.</p>
-                        <p>As the founder of <strong>Spiral House</strong>, I partner with organizations to identify
-                            friction points in their development processes and implement solutions that allow engineers
-                            to focus on what matters most: building great products.</p>
-                    </div>
+        <section id="about" class="section">
+            <h2 class="section-title">About</h2>
+            <div class="about-content">
+                <div class="profile-image">
+                     <!-- Update image path to point to public dir -->
+                    <img src="/profile.jpeg" alt="John Burbridge Profile Photo">
                 </div>
-            </section>
+                <div class="about-text">
+                    <p>I'm an engineering leader with 25+ years of experience transforming software development
+                        practices. Based in Oakland, CA, I specialize in maximizing developer productivity through
+                        optimized workflows, infrastructure, and tooling.</p>
+                    <p>As the founder of <strong>Spiral House</strong>, I partner with organizations to identify
+                        friction points in their development processes and implement solutions that allow engineers
+                        to focus on what matters most: building great products.</p>
+                </div>
+            </div>
+        </section>
 
-            <section id="expertise" class="section">
-                <h2 class="section-title">Expertise</h2>
-                <div class="expertise-grid">
-                    <div class="expertise-card">
-                        <div class="expertise-icon"><i class="fas fa-rocket"></i></div>
-                        <h3>Build Engineering</h3>
-                        <p>Optimizing build systems for speed and reliability. Creating scalable, maintainable build
-                            pipelines that reduce wait times and increase confidence.</p>
-                    </div>
-                    <div class="expertise-card">
-                        <div class="expertise-icon"><i class="fas fa-infinity"></i></div>
-                        <h3>CI/CD Excellence</h3>
-                        <p>Implementing continuous integration and delivery pipelines that enable faster, safer
-                            deployments with comprehensive testing and validation.</p>
-                    </div>
-                    <div class="expertise-card">
-                        <div class="expertise-icon"><i class="fas fa-server"></i></div>
-                        <h3>DevOps Transformation</h3>
-                        <p>Bridging development and operations with tools and practices that foster collaboration,
-                            enhance system reliability, and reduce Mean Time To Resolution.</p>
-                    </div>
-                    <div class="expertise-card">
-                        <div class="expertise-icon"><i class="fas fa-robot"></i></div>
-                        <h3>AI-Assisted Development</h3>
-                        <p>Leveraging AI tools to accelerate developer workflows, automate repetitive tasks, and enhance
-                            code quality and documentation.</p>
-                    </div>
-                    <div class="expertise-card">
-                        <div class="expertise-icon"><i class="fas fa-cloud"></i></div>
-                        <h3>Cloud Infrastructure</h3>
-                        <p>Designing and implementing scalable, cost-effective cloud solutions with security and
-                            performance in mind.</p>
-                    </div>
-                    <div class="expertise-card">
-                        <div class="expertise-icon"><i class="fas fa-chart-line"></i></div>
-                        <h3>Developer Metrics</h3>
-                        <p>Establishing meaningful productivity metrics that highlight opportunities for improvement
-                            without creating perverse incentives.</p>
-                    </div>
+        <section id="expertise" class="section">
+            <h2 class="section-title">Expertise</h2>
+            <div class="expertise-grid">
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Build Engineering</h3>
+                    <p>Optimizing build systems for speed and reliability. Creating scalable, maintainable build
+                        pipelines that reduce wait times and increase confidence.</p>
                 </div>
-            </section>
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-infinity"></i></div>
+                    <h3>CI/CD Excellence</h3>
+                    <p>Implementing continuous integration and delivery pipelines that enable faster, safer
+                        deployments with comprehensive testing and validation.</p>
+                </div>
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-server"></i></div>
+                    <h3>DevOps Transformation</h3>
+                    <p>Bridging development and operations with tools and practices that foster collaboration,
+                        enhance system reliability, and reduce Mean Time To Resolution.</p>
+                </div>
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-robot"></i></div>
+                    <h3>AI-Assisted Development</h3>
+                    <p>Leveraging AI tools to accelerate developer workflows, automate repetitive tasks, and enhance
+                        code quality and documentation.</p>
+                </div>
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-cloud"></i></div>
+                    <h3>Cloud Infrastructure</h3>
+                    <p>Designing and implementing scalable, cost-effective cloud solutions with security and
+                        performance in mind.</p>
+                </div>
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Developer Metrics</h3>
+                    <p>Establishing meaningful productivity metrics that highlight opportunities for improvement
+                        without creating perverse incentives.</p>
+                </div>
+            </div>
+        </section>
 
-            <section id="experience" class="section">
-                <h2 class="section-title">Experience</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3>Fortune 500 Companies</h3>
-                            <p class="timeline-company">Apple, Oracle, Salesforce.com</p>
-                            <p>Delivering enterprise-grade developer productivity solutions at scale for industry
-                                leaders.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3>Accelerating Start-ups</h3>
-                            <p class="timeline-company">Hyper-growth Phase</p>
-                            <p>Implementing efficient developer workflows and infrastructure that scales with rapidly
-                                growing engineering teams.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3>Roadmap Planning &amp; Execution</h3>
-                            <p>Strategic development of DevEx initiatives, from conception to implementation, aligned
-                                with business goals and engineering needs.</p>
-                        </div>
+        <section id="experience" class="section">
+            <h2 class="section-title">Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3>Fortune 500 Companies</h3>
+                        <p class="timeline-company">Apple, Oracle, Salesforce.com</p>
+                        <p>Delivering enterprise-grade developer productivity solutions at scale for industry
+                            leaders.</p>
                     </div>
                 </div>
-                <div class="experience-footer">
-                    <p>For a complete work history, please visit my <a href="https://www.linkedin.com/in/johnburbridge/"
-                            target="_blank" rel="noopener noreferrer">LinkedIn profile</a>.</p>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3>Accelerating Start-ups</h3>
+                        <p class="timeline-company">Hyper-growth Phase</p>
+                        <p>Implementing efficient developer workflows and infrastructure that scales with rapidly
+                            growing engineering teams.</p>
+                    </div>
                 </div>
-            </section>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3>Roadmap Planning &amp; Execution</h3>
+                        <p>Strategic development of DevEx initiatives, from conception to implementation, aligned
+                            with business goals and engineering needs.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="experience-footer">
+                <p>For a complete work history, please visit my <a href="https://www.linkedin.com/in/johnburbridge/"
+                        target="_blank" rel="noopener noreferrer">LinkedIn profile</a>.</p>
+            </div>
+        </section>
 
-            <section id="contact" class="section">
-                <h2 class="section-title">Get in Touch</h2>
-                <div class="contact-content">
-                    <p>Ready to transform your developer experience? I'd love to discuss how we can collaborate to
-                        elevate your engineering organization's productivity and satisfaction.</p>
-                    <div class="contact-methods">
-                        <a href="mailto:info@spiralhouse.io" class="contact-method">
-                            <i class="fas fa-envelope"></i>
-                            <span>info@spiralhouse.io</span>
-                        </a>
-                        <a href="https://www.linkedin.com/in/johnburbridge/" target="_blank" rel="noopener noreferrer"
-                            class="contact-method">
-                            <i class="fab fa-linkedin"></i>
-                            <span>LinkedIn</span>
-                        </a>
-                    </div>
+        <!-- Add Recent Posts Section -->
+        <section id="recent-posts" class="section bg-gray-900 py-12">
+            <h2 class="section-title">Recent Blog Posts</h2>
+            <ul class="max-w-3xl mx-auto space-y-4">
+              {posts.map((post) => (
+                <li class="border-b border-gray-700 pb-2">
+                  <h3 class="text-xl font-semibold mb-1">
+                    <a href={`/blog/${post.slug}/`} class="text-orange-400 hover:text-orange-300 transition duration-200">
+                      {post.data.title}
+                    </a>
+                  </h3>
+                  <p class="text-gray-400 text-sm">
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {post.data.pubDate.toLocaleDateString('en-us', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </time>
+                  </p>
+                </li>
+              ))}
+              {posts.length === 0 && (
+                <p class="text-center text-gray-400">No posts yet!</p>
+              )}
+            </ul>
+            {posts.length > 0 && (
+              <div class="text-center mt-8">
+                  <a href="/blog" class="cta-secondary">View All Posts &rarr;</a>
+              </div>
+            )}
+        </section>
+
+        <section id="contact" class="section">
+            <h2 class="section-title">Get in Touch</h2>
+            <div class="contact-content">
+                <p>Ready to transform your developer experience? I'd love to discuss how we can collaborate to
+                    elevate your engineering organization's productivity and satisfaction.</p>
+                <div class="contact-methods">
+                    <a href="mailto:info@spiralhouse.io" class="contact-method">
+                        <i class="fas fa-envelope"></i>
+                        <span>info@spiralhouse.io</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/johnburbridge/" target="_blank" rel="noopener noreferrer"
+                        class="contact-method">
+                        <i class="fab fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </a>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
 
         <footer>
             <div class="footer-content">

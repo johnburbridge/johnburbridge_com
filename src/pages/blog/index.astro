@@ -1,0 +1,43 @@
+---
+// src/pages/blog/index.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Get all blog posts
+const allPosts = await getCollection('blog');
+
+// Sort posts by date, newest first
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const pageTitle = "Blog Archive";
+---
+<BaseLayout title={pageTitle}>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8 text-center">{pageTitle}</h1>
+    
+    <ul class="space-y-8">
+      {sortedPosts.map(post => (
+        <li class="p-6 bg-gray-800 rounded-lg shadow-md">
+          <h2 class="text-2xl font-semibold mb-2">
+            <a href={`/blog/${post.slug}/`} class="text-orange-400 hover:text-orange-300 transition duration-200">
+              {post.data.title}
+            </a>
+          </h2>
+          <p class="text-gray-400 text-sm mb-3">
+            Published on: <time datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
+            </time>
+          </p>
+          <p class="text-gray-300 mb-4">{post.data.description}</p>
+          <a href={`/blog/${post.slug}/`} class="inline-block text-orange-500 hover:text-orange-400 font-medium">
+            Read more &rarr;
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
