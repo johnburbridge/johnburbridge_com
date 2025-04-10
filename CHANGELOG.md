@@ -1,3 +1,17 @@
+# [1.3.0](https://github.com/johnburbridge/johnburbridge_com/compare/v1.2.0...v1.3.0) (2025-04-10)
+
+
+### Features
+
+* basic blog structure with Astro ([530a2a9](https://github.com/johnburbridge/johnburbridge_com/commit/530a2a99e580c27fac43ee16904c8222a8d9691a))
+
+# [1.2.0](https://github.com/johnburbridge/johnburbridge_com/compare/v1.1.0...v1.2.0) (2025-04-10)
+
+
+### Features
+
+* added astro ([b09dc28](https://github.com/johnburbridge/johnburbridge_com/commit/b09dc28640eed0ad21c04038664da3f7e2d460d0))
+
 # [1.1.0](https://github.com/johnburbridge/johnburbridge_com/compare/v1.0.0...v1.1.0) (2025-04-10)
 
 

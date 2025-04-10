@@ -1,0 +1,47 @@
+---
+// Base layout for all pages
+// We will import global styles here
+import '../styles/global.css';
+// DO NOT import client-side script here
+// import '../scripts/script.js';
+
+// Define props if needed later, e.g., for dynamic titles
+export interface Props {
+	title?: string;
+}
+
+const { title = 'John Burbridge | Developer Experience Consulting' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <!-- Link to external Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add other meta tags, favicons, etc. as needed -->
+</head>
+<body>
+    <!-- Add Header/Nav Here -->
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/#about">About</a>
+            <a href="/#expertise">Expertise</a>
+            <a href="/#experience">Experience</a>
+            <a href="/blog">Blog</a>
+            <a href="/#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Wrap slotted content in main tag for consistent padding -->
+    <main>
+        <slot />
+    </main>
+
+    <!-- Include the script via a standard script tag -->
+    <!-- Astro will process and bundle this correctly -->
+    <script src="../scripts/script.js"></script>
+</body>
+</html>

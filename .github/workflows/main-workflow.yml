@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 env:
   REGISTRY: ghcr.io
@@ -24,17 +24,20 @@ jobs:
           # Fetch all history and tags so semantic-release can analyze commits
           # and we can compare tags accurately.
           fetch-depth: 0
-          fetch-tags: true 
+          fetch-tags: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
-        
+
+      - name: Build static site
+        run: npm run build
+
       - name: Get latest tag before release
         id: pre_tag
         run: |
@@ -49,8 +52,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Add GHCR login token if needed by any semantic-release plugin for registry interaction
-          # GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-          
+          # GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Get latest tag after release
         id: post_tag
         run: |
@@ -58,7 +61,7 @@ jobs:
           LATEST_TAG="$(git describe --tags --abbrev=0 2>/dev/null || echo \"\")"
           echo "Post-release tag: ${LATEST_TAG}"
           echo "latest_tag=${LATEST_TAG}" >> "$GITHUB_OUTPUT"
-          
+
       - name: Check for new release
         id: check_release
         run: |
@@ -73,7 +76,7 @@ jobs:
             echo "new_release_version=" >> "$GITHUB_OUTPUT"
             echo "new_release_tag=" >> "$GITHUB_OUTPUT"
           fi
-          
+
       - name: Get PR number from commit
         # Only run if a new version was released
         if: steps.check_release.outputs.new_release_version != ''
@@ -110,16 +113,16 @@ jobs:
           RELEASE_VERSION="${{ steps.check_release.outputs.new_release_version }}"
           RELEASE_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${RELEASE_VERSION}"
           LATEST_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          
+
           echo "Pulling floating PR image: ${FLOATING_PR_IMAGE}"
           docker pull "${FLOATING_PR_IMAGE}"
-          
+
           echo "Tagging ${FLOATING_PR_IMAGE} as release image: ${RELEASE_IMAGE}"
           docker tag "${FLOATING_PR_IMAGE}" "${RELEASE_IMAGE}"
           docker push "${RELEASE_IMAGE}"
-          
+
           echo "Tagging ${FLOATING_PR_IMAGE} as latest image: ${LATEST_IMAGE}"
           docker tag "${FLOATING_PR_IMAGE}" "${LATEST_IMAGE}"
           docker push "${LATEST_IMAGE}"
-          
+
           echo "Image push completed successfully for version ${RELEASE_VERSION}"
