@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 # Set noninteractive frontend to avoid prompts during installs
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install common utilities, Node.js dependencies, and git
+# Install common utilities, Node.js dependencies, Git, Zsh, and tools for kubectl
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     sudo \
     openssh-client \
+    zsh \
+    apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js 20.x
@@ -34,6 +36,13 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     && apt-get update \
     && apt-get install -y --no-install-recommends gh
 
+# Install kubectl
+RUN curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg \
+    && echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list \
+    && apt-get update \
+    && apt-get install -y kubectl \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install ShellCheck
 RUN apt-get update && apt-get install -y --no-install-recommends shellcheck && rm -rf /var/lib/apt/lists/*
 
@@ -42,22 +51,30 @@ ARG ACTIONLINT_VERSION=1.6.25
 RUN curl -sL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash -s -- ${ACTIONLINT_VERSION} \
     && mv actionlint /usr/local/bin/
 
-# Create a non-root user and add to sudo and docker groups
+# Create a non-root user with zsh as default shell and add to sudo/docker groups
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /usr/bin/zsh \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME \
     && usermod -aG sudo $USERNAME \
     && usermod -aG docker $USERNAME
 
-# Switch to non-root user
+# Switch to non-root user FOR oh-my-zsh install
 USER $USERNAME
-
-# Set home directory
 WORKDIR /home/$USERNAME
 
-# Set default command (optional)
-CMD [ "/bin/bash" ]
+# Install Oh My Zsh and configure plugins
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
+    && sed -i 's/plugins=(git)/plugins=(git history kubectl)/g' /home/$USERNAME/.zshrc
+
+# Set default command (optional) - Keep bash for initial container start if needed, terminal will use zsh via settings
+# CMD [ "/bin/bash" ]
+
+# Final switch back for container runtime user is implicitly vscode due to USER command above
+WORKDIR /home/$USERNAME
+
+# Optional: Clean up apt cache if needed (usually done earlier)
+# RUN rm -rf /var/lib/apt/lists/*
