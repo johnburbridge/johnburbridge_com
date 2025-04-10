@@ -58,7 +58,7 @@ jobs:
           docker pull ${PR_LATEST_IMAGE}
           
           # Inspect the image to get the exact dev version label set by the PR workflow
-          DEV_VERSION=$(docker inspect --format='{{ index .Config.Labels \"org.opencontainers.image.version\" }}' ${PR_LATEST_IMAGE})
+          DEV_VERSION=$(docker inspect --format='{{ index .Config.Labels "org.opencontainers.image.version" }}' ${PR_LATEST_IMAGE})
           if [ -z "$DEV_VERSION" ]; then
             echo "Error: Could not find version label 'org.opencontainers.image.version' on ${PR_LATEST_IMAGE}"
             exit 1
