@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>John Burbridge | Developer Experience Consulting</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-
-<body>
+---
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="John Burbridge | Developer Experience Consulting">
+    <!-- Content from the original site/index.html <body> tag -->
     <div class="container">
         <header>
             <nav>
@@ -38,7 +32,8 @@
                 <h2 class="section-title">About</h2>
                 <div class="about-content">
                     <div class="profile-image">
-                        <div class="image-placeholder"></div>
+                         <!-- Update image path to point to public dir -->
+                        <img src="/profile.jpeg" alt="John Burbridge Profile Photo">
                     </div>
                     <div class="about-text">
                         <p>I'm an engineering leader with 25+ years of experience transforming software development
@@ -155,8 +150,4 @@
             </div>
         </footer>
     </div>
-
-    <script src="script.js"></script>
-</body>
-
-</html>
+</BaseLayout>
