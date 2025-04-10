@@ -1,0 +1,24 @@
+{
+    "action": "opened",
+    "number": 55,
+    "pull_request": {
+        "number": 55,
+        "head": {
+            "ref": "feature-branch",
+            "sha": "abcdef123456"
+        },
+        "base": {
+            "ref": "main",
+            "sha": "654321fedcba"
+        }
+    },
+    "repository": {
+        "id": 123456789,
+        "name": "johnburbridge_com",
+        "full_name": "johnburbridge/johnburbridge_com",
+        "owner": {
+            "login": "johnburbridge",
+            "id": 987654321
+        }
+    }
+}
