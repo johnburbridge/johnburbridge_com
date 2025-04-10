@@ -39,9 +39,9 @@ jobs:
         id: pre_tag
         run: |
           # Get the latest tag, suppress errors if no tags exist yet
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          LATEST_TAG="$(git describe --tags --abbrev=0 2>/dev/null || echo \"\")"
           echo "Pre-release tag: ${LATEST_TAG}"
-          echo "latest_tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "latest_tag=${LATEST_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Run Semantic Release
         id: semantic
@@ -55,9 +55,9 @@ jobs:
         id: post_tag
         run: |
           # Get the latest tag again
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          LATEST_TAG="$(git describe --tags --abbrev=0 2>/dev/null || echo \"\")"
           echo "Post-release tag: ${LATEST_TAG}"
-          echo "latest_tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "latest_tag=${LATEST_TAG}" >> "$GITHUB_OUTPUT"
           
       - name: Check for new release
         id: check_release
@@ -66,12 +66,12 @@ jobs:
           POST_TAG="${{ steps.post_tag.outputs.latest_tag }}"
           if [[ -n "$POST_TAG" && "$PRE_TAG" != "$POST_TAG" ]]; then
             echo "New release detected: ${POST_TAG}"
-            echo "new_release_version=${POST_TAG#v}" >> $GITHUB_OUTPUT
-            echo "new_release_tag=${POST_TAG}" >> $GITHUB_OUTPUT
+            echo "new_release_version=${POST_TAG#v}" >> "$GITHUB_OUTPUT"
+            echo "new_release_tag=${POST_TAG}" >> "$GITHUB_OUTPUT"
           else
             echo "No new release detected."
-            echo "new_release_version=" >> $GITHUB_OUTPUT
-            echo "new_release_tag=" >> $GITHUB_OUTPUT
+            echo "new_release_version=" >> "$GITHUB_OUTPUT"
+            echo "new_release_tag=" >> "$GITHUB_OUTPUT"
           fi
           
       - name: Get PR number from commit
@@ -80,15 +80,15 @@ jobs:
         id: pr
         run: |
           # Extract the PR number from the merge commit message
-          PR_NUMBER=$(git log -1 --pretty=%s | grep -o '#[0-9]\+' | tr -d '#')
+          PR_NUMBER="$(git log -1 --pretty=%s | grep -o '#[0-9]\+' | tr -d '#')"
           if [ -n "$PR_NUMBER" ]; then
-            echo "PR_NUMBER=${PR_NUMBER}" >> $GITHUB_ENV
-            echo "pr_number=${PR_NUMBER}" >> $GITHUB_OUTPUT
+            echo "PR_NUMBER=${PR_NUMBER}" >> "$GITHUB_ENV"
+            echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
           else
             echo "Warning: Could not extract PR number from merge commit message: $(git log -1 --pretty=%s)"
             # Set to empty to potentially skip image tagging if needed
-            echo "PR_NUMBER=" >> $GITHUB_ENV 
-            echo "pr_number=" >> $GITHUB_OUTPUT
+            echo "PR_NUMBER=" >> "$GITHUB_ENV" 
+            echo "pr_number=" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Log in to the Container registry
@@ -112,14 +112,14 @@ jobs:
           LATEST_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
           
           echo "Pulling floating PR image: ${FLOATING_PR_IMAGE}"
-          docker pull ${FLOATING_PR_IMAGE}
+          docker pull "${FLOATING_PR_IMAGE}"
           
           echo "Tagging ${FLOATING_PR_IMAGE} as release image: ${RELEASE_IMAGE}"
-          docker tag ${FLOATING_PR_IMAGE} ${RELEASE_IMAGE}
-          docker push ${RELEASE_IMAGE}
+          docker tag "${FLOATING_PR_IMAGE}" "${RELEASE_IMAGE}"
+          docker push "${RELEASE_IMAGE}"
           
           echo "Tagging ${FLOATING_PR_IMAGE} as latest image: ${LATEST_IMAGE}"
-          docker tag ${FLOATING_PR_IMAGE} ${LATEST_IMAGE}
-          docker push ${LATEST_IMAGE}
+          docker tag "${FLOATING_PR_IMAGE}" "${LATEST_IMAGE}"
+          docker push "${LATEST_IMAGE}"
           
           echo "Image push completed successfully for version ${RELEASE_VERSION}"
