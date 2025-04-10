@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:js": "eslint 'src/**/*.js'",
-    "lint": "npm run lint:css && npm run lint:js"
+    "lint": "npm run lint:css && npm run lint:js",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -21,8 +22,14 @@
     "astro": "^4.11.0",
     "eslint": "^8.56.0",
     "html-validate": "^8.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "markdownlint-cli2": "^0.17.2",
     "semantic-release": "^24.2.3",
     "stylelint": "^16.2.1",
     "stylelint-config-standard": "^36.0.0"
+  },
+  "lint-staged": {
+    "*.md": "markdownlint-cli2"
   }
 }

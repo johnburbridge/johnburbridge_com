@@ -15,7 +15,7 @@
         4321 // Add Astro default dev port
     ],
     // Use 'postCreateCommand' to run commands after the container is created.
-    // "postCreateCommand": "npm install",
+    "postCreateCommand": "sudo npm install -g markdownlint-cli2",
     // Configure tool-specific properties.
     "customizations": {
         "vscode": {
@@ -43,7 +43,8 @@
                 "redhat.vscode-yaml",
                 "ms-kubernetes-tools.vscode-kubernetes-tools",
                 "wholroyd.helm",
-                "timonwong.shellcheck"
+                "timonwong.shellcheck",
+                "DavidAnson.vscode-markdownlint" // Added Markdownlint extension
             ]
         }
     },
