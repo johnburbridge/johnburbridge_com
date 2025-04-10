@@ -105,20 +105,21 @@ jobs:
         # Only run if a new version was released AND we found the PR number
         if: steps.check_release.outputs.new_release_version != '' && env.PR_NUMBER != ''
         run: |
-          PR_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
+          # Pull the floating tag for the specific PR
+          FLOATING_PR_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-latest"
           RELEASE_VERSION="${{ steps.check_release.outputs.new_release_version }}"
           RELEASE_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${RELEASE_VERSION}"
           LATEST_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
           
-          echo "Pulling PR image: ${PR_IMAGE}"
-          docker pull ${PR_IMAGE}
+          echo "Pulling floating PR image: ${FLOATING_PR_IMAGE}"
+          docker pull ${FLOATING_PR_IMAGE}
           
-          echo "Tagging ${PR_IMAGE} as release image: ${RELEASE_IMAGE}"
-          docker tag ${PR_IMAGE} ${RELEASE_IMAGE}
+          echo "Tagging ${FLOATING_PR_IMAGE} as release image: ${RELEASE_IMAGE}"
+          docker tag ${FLOATING_PR_IMAGE} ${RELEASE_IMAGE}
           docker push ${RELEASE_IMAGE}
           
-          echo "Tagging ${PR_IMAGE} as latest image: ${LATEST_IMAGE}"
-          docker tag ${PR_IMAGE} ${LATEST_IMAGE}
+          echo "Tagging ${FLOATING_PR_IMAGE} as latest image: ${LATEST_IMAGE}"
+          docker tag ${FLOATING_PR_IMAGE} ${LATEST_IMAGE}
           docker push ${LATEST_IMAGE}
           
           echo "Image push completed successfully for version ${RELEASE_VERSION}"
