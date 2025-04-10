@@ -39,17 +39,17 @@ jobs:
         id: base_semver
         run: |
           # Get most recent tag, default to 0.0.0 if none exists
-          LATEST_TAG=$(git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*" 2>/dev/null || echo "v0.0.0")
+          LATEST_TAG="$(git describe --tags --abbrev=0 --match "v[0-9]*.[0-9]*.[0-9]*" 2>/dev/null || echo \"v0.0.0\")"
           BASE_VERSION="${LATEST_TAG#v}"
-          echo "BASE_VERSION=${BASE_VERSION}" >> $GITHUB_ENV
-          echo "base_version=${BASE_VERSION}" >> $GITHUB_OUTPUT
+          echo "BASE_VERSION=${BASE_VERSION}" >> "$GITHUB_ENV"
+          echo "base_version=${BASE_VERSION}" >> "$GITHUB_OUTPUT"
           
       - name: Construct PR Version Tag
         id: pr_version
         run: |
           PR_TAG_VERSION="${{ env.BASE_VERSION }}-pr${{ github.event.pull_request.number }}"
-          echo "PR_TAG_VERSION=${PR_TAG_VERSION}" >> $GITHUB_ENV
-          echo "pr_tag_version=${PR_TAG_VERSION}" >> $GITHUB_OUTPUT
+          echo "PR_TAG_VERSION=${PR_TAG_VERSION}" >> "$GITHUB_ENV"
+          echo "pr_tag_version=${PR_TAG_VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
