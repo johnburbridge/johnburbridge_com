@@ -4,7 +4,22 @@
     ],
     "plugins": [
         "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/release-notes-generator",
+            {
+                "presetConfig": {
+                    "types": [
+                        { "type": "feat", "section": "✨ Features" },
+                        { "type": "fix", "section": "🐛 Bug Fixes" },
+                        { "type": "build", "section": "🏗️ Build System" },
+                        { "type": "ci", "section": "🚀 Continuous Integration" },
+                        { "type": "docs", "section": "📚 Documentation" },
+                        { "type": "refactor", "section": "♻️ Code Refactoring" },
+                        { "type": "test", "section": "🧪 Tests" }
+                    ]
+                }
+            }
+        ],
         "@semantic-release/changelog",
         "@semantic-release/npm",
         [

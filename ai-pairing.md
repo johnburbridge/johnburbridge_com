@@ -51,20 +51,29 @@ The primary development environment is the configured **Dev Container** (`.devco
 
 This project uses **Semantic Release** driven by **Conventional Commits**. Adhering to this is crucial.
 
-1.  **Branching:** Create feature or fix branches from `main` (e.g., `feat/add-contact-form`, `fix/css-alignment`).
-2.  **Committing:** Use Conventional Commit messages. Examples:
+**The standard workflow is:**
+
+1.  **Sync `main`:** Ensure your local `main` branch is up-to-date with the remote `origin/main` (`git checkout main && git pull origin main`).
+2.  **Create Branch:** Create a new feature or fix branch from `main` (e.g., `git checkout -b feat/add-contact-form` or `git checkout -b fix/css-alignment`). **Do not commit directly to `main`.**
+3.  **Make Changes:** Implement your changes on the branch.
+4.  **Commit Changes:** Commit your work using the **Conventional Commits** format. Examples:
     - `feat: Add new portfolio section` (Minor release)
     - `fix: Correct navigation link error` (Patch release)
-    - `perf: Optimize image loading speed` (Patch release)
-    - `docs: Update README with deployment steps` (No release)
-    - `style: Format code according to Prettier rules` (No release)
-    - `refactor: Improve JavaScript structure` (No release)
-    - `test: Add unit tests for script.js` (No release)
-    - `chore: Update npm dependencies` (No release)
+    - `build: Update Dockerfile build stage`
+    - `ci: Skip docker push when running act`
+    - `docs: Update AI pairing guidelines`
+    - `refactor: Simplify JavaScript logic`
+    - `test: Add unit tests for script.js`
+    - `chore: Update npm dependencies`
     - `feat!: Implement user login system` (**Breaking Change** -> Major release)
-    - `fix: Resolve critical rendering bug\n\nBREAKING CHANGE: Requires updated browser version.` (**Breaking Change** -> Major release)
-3.  **Pull Requests:** Open PRs against the `main` branch. PRs trigger CI checks.
-4.  **Merging:** Merging to `main` triggers the release workflow.
+    - `fix: Resolve critical rendering bug
+
+BREAKING CHANGE: Requires updated browser version.` (**Breaking Change** -> Major release)
+5.  **Push Branch:** Push your local branch to the remote (`git push origin your-branch-name`).
+6.  **Create Pull Request:** Use the GitHub UI or the `gh pr create`command to open a Pull Request from your branch against the`main`branch. Provide a descriptive title and body.
+7.  **CI Checks:** The PR workflow will automatically run linters and build/validate the Docker image.
+8.  **Code Review & Merge:** Once the PR passes CI checks and is approved, merge it into`main`using the GitHub UI (typically using a **Squash and Merge** or **Rebase and Merge** strategy).
+9.  **Automated Release:** Merging to`main` triggers the release workflow, which handles version bumping, changelog generation, tagging, and publishing based on the Conventional Commits in the merged PR.
 
 ## CI/CD Overview (GitHub Actions)
 
@@ -99,6 +108,14 @@ This project uses **Semantic Release** driven by **Conventional Commits**. Adher
 - **File Path Handling Note:** There appears to be an inconsistency in path handling between different file system tools in this environment.
   - When _writing_ files (`mcp_filesystem_write_file`), specifying the full host path (e.g., `/Users/jburbridge/Projects/johnburbridge_com/filename.md`) seems necessary.
   - When _reading_ files (`read_file`), using a simple relative path (e.g., `filename.md`) appears to work correctly. Please be aware of this when interacting with files.
+
+* **Git Workflow:** Always follow the standard Git workflow described above:
+  1.  Ensure `main` is up-to-date.
+  2.  Create a new branch for changes.
+  3.  Commit changes to the branch using Conventional Commits.
+  4.  Push the branch.
+  5.  Open a descriptive Pull Request against `main`.
+      _Do not suggest committing or pushing directly to the `main` branch._ Ask the user to merge approved PRs.
 
 ---
 
