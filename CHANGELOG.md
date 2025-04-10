@@ -1,3 +1,15 @@
+# [1.4.0](https://github.com/johnburbridge/johnburbridge_com/compare/v1.3.1...v1.4.0) (2025-04-10)
+
+
+### Bug Fixes
+
+* update pre-push hook to use npx lint-staged and remove deprecated header ([036bd55](https://github.com/johnburbridge/johnburbridge_com/commit/036bd55c0f8a56ed8c973e9e2cb30171b06e7680))
+
+
+### Features
+
+* add markdown linting and pre-push hook ([4466d99](https://github.com/johnburbridge/johnburbridge_com/commit/4466d990e5278061e0038a2e11e94a4375819729))
+
 ## [1.3.1](https://github.com/johnburbridge/johnburbridge_com/compare/v1.3.0...v1.3.1) (2025-04-10)
 
 ### 🧪 Bug Fixes
