@@ -2,7 +2,7 @@ name: PR Build and Publish
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   REGISTRY: ghcr.io
@@ -25,8 +25,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -34,6 +34,9 @@ jobs:
       - name: Lint code
         id: lint
         run: npm run lint
+
+      - name: Build static site
+        run: npm run build
 
       - name: Get base semantic version
         id: base_semver
@@ -43,7 +46,7 @@ jobs:
           BASE_VERSION="${LATEST_TAG#v}"
           echo "BASE_VERSION=${BASE_VERSION}" >> "$GITHUB_ENV"
           echo "base_version=${BASE_VERSION}" >> "$GITHUB_OUTPUT"
-          
+
       - name: Construct PR Version Tag
         id: pr_version
         run: |
@@ -84,20 +87,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = `## Docker Image Built 🐳
-            
+
             A new Docker image has been built and pushed to the GitHub Container Registry:
-            
+
             - Image: \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PR_TAG_VERSION }}\`
-            
+
             You can pull and run it with:
             \`\`\`bash
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PR_TAG_VERSION }}
             docker run -p 8080:8080 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PR_TAG_VERSION }}
             \`\`\`
-            
+
             This image will be used for deployment if this PR is merged.
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
