@@ -1,0 +1,27 @@
+---
+// src/pages/blog/[...slug].astro
+import { getCollection } from 'astro:content';
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
+
+// This function is required for Astro's static generation
+// It tells Astro which paths (URLs) to generate based on the blog posts
+export async function getStaticPaths() {
+  // Get all entries from the 'blog' collection
+  const blogEntries = await getCollection('blog');
+  
+  // Map each blog entry to an object with `params` and `props`
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug }, // The URL slug will be derived from the filename (e.g., 'first-post')
+    props: { entry }, // Pass the full blog entry data to the page component
+  }));
+}
+
+// Get the specific blog entry for this page from the props passed by getStaticPaths
+const { entry } = Astro.props;
+
+// Astro automatically renders the Markdown content when you pass the entry
+const { Content } = await entry.render();
+---
+<BlogPostLayout entry={entry}>
+  <Content /> {/* Render the Markdown content here */}
+</BlogPostLayout>

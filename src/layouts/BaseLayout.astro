@@ -23,8 +23,22 @@ const { title = 'John Burbridge | Developer Experience Consulting' } = Astro.pro
     <!-- Add other meta tags, favicons, etc. as needed -->
 </head>
 <body>
-    <!-- Main content from individual pages will be injected here -->
-    <slot />
+    <!-- Add Header/Nav Here -->
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/#about">About</a>
+            <a href="/#expertise">Expertise</a>
+            <a href="/#experience">Experience</a>
+            <a href="/blog">Blog</a>
+            <a href="/#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Wrap slotted content in main tag for consistent padding -->
+    <main>
+        <slot />
+    </main>
 
     <!-- Include the script via a standard script tag -->
     <!-- Astro will process and bundle this correctly -->
