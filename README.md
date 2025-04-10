@@ -12,24 +12,29 @@ This repository contains the personal website for John Burbridge, a DevEx Engine
 
 ```
 johnburbridge_com/
+├── .devcontainer/         # VS Code Dev Container configuration
 ├── .github/workflows/     # GitHub Actions workflows
-├── config/                # Configuration files
-│   └── nginx.conf         # Nginx web server configuration
-├── site/                  # Website content
-│   ├── index.html         # Main HTML content
-│   ├── profile.jpeg       # Profile picture
-│   ├── script.js          # JavaScript for interactivity
-│   └── styles.css         # CSS styling
+├── .husky/                # Husky Git hooks configuration
+├── config/                # Configuration files (e.g., Nginx)
+├── public/                # Static assets served by Astro
+├── src/                   # Astro source files (pages, layouts, components, content)
+│   ├── content/           # Markdown content (e.g., blog posts)
+│   ├── layouts/           # Astro layout components
+│   └── pages/             # Astro page components
 ├── .dockerignore          # Files to exclude from Docker build
 ├── .eslintrc.json         # JavaScript linting configuration
-├── .htmlvalidate.json     # HTML validation configuration
+├── .gitignore             # Files ignored by Git
+├── .htmlvalidate.json     # HTML validation configuration (if applicable)
+├── .markdownlint.json     # Markdown linting configuration
 ├── .releaserc.json        # Semantic Release configuration
 ├── .stylelintrc.json      # CSS linting configuration
+├── astro.config.mjs       # Astro configuration file
 ├── CHANGELOG.md           # Automatically generated release notes
 ├── Dockerfile             # Docker configuration for building container
 ├── package.json           # Node.js dependencies and scripts
 ├── package-lock.json      # Node.js locked dependencies
-└── version.txt            # Deprecated - Version is now in package.json & Git tags
+├── README.md              # This file
+└── TODO.md                # Pending tasks
 ```
 
 ## Development
@@ -42,23 +47,28 @@ johnburbridge_com/
 
 ### Local Development
 
-1. Install dependencies:
+1.  **Install dependencies:**
 
-   ```bash
-   npm ci
-   ```
+    ```bash
+    npm ci
+    ```
 
-2. Lint code:
-   ```bash
-   npm run lint
-   ```
-3. Validate workflows (requires Homebrew and act):
-   ```bash
-   # brew install act actionlint
-   ./validate-workflows.sh
-   # Test individual workflows locally (see .github/event_samples/)
-   # act pull_request -e .github/event_samples/pull_request_event.json | cat
-   ```
+2.  **Run Astro dev server:**
+
+    ```bash
+    npm run dev
+    ```
+    This starts the development server, usually at `http://localhost:4321`.
+
+3.  **Lint code:** See [Linting & Formatting](#linting--formatting) section.
+
+4.  **Validate workflows (requires Homebrew and act):**
+    ```bash
+    # brew install act actionlint
+    ./validate-workflows.sh
+    # Test individual workflows locally (see .github/event_samples/)
+    # act pull_request -e .github/event_samples/pull_request_event.json | cat
+    ```
 
 ### Dev Container
 
@@ -75,6 +85,7 @@ This project includes a Dev Container configuration (`.devcontainer/`) for a con
   - `gh` (GitHub CLI)
   - `shellcheck`
   - `actionlint` (for GitHub Actions workflow validation)
+  - `markdownlint-cli2` (for Markdown linting)
   - `curl`, `gnupg`, `jq`
 - **VS Code Extensions:**
   - Docker (`ms-azuretools.vscode-docker`)
@@ -82,20 +93,48 @@ This project includes a Dev Container configuration (`.devcontainer/`) for a con
   - Prettier (`esbenp.prettier-vscode`)
   - ESLint (`dbaeumer.vscode-eslint`)
   - Stylelint (`stylelint.vscode-stylelint`)
+  - Markdownlint (`DavidAnson.vscode-markdownlint`)
   - YAML (`redhat.vscode-yaml`)
   - Kubernetes (`ms-kubernetes-tools.vscode-kubernetes-tools`)
   - ShellCheck (`timonwong.shellcheck`)
 - **Key Configurations:**
-  - Port `8080` forwarded.
+  - Ports `8080` (built container) and `4321` (Astro dev) forwarded.
   - Host's Docker socket mounted (allows controlling host Docker from container).
   - Host's `.gitconfig` and `.ssh` directory mounted (shares Git/SSH configuration).
   - Runs as non-root user `vscode` with `sudo` privileges.
+  - Installs `markdownlint-cli2` globally on container creation.
 
 To use the Dev Container:
 
-1. Ensure you have Docker Desktop running.
-2. Open this project folder in VS Code/Cursor.
-3. When prompted, click "Reopen in Container". Alternatively, open the Command Palette (`Cmd/Ctrl+Shift+P`) and select "Remote-Containers: Reopen in Container".
+1.  Ensure you have Docker Desktop running.
+2.  Open this project folder in VS Code/Cursor.
+3.  When prompted, click "Reopen in Container". Alternatively, open the Command Palette (`Cmd/Ctrl+Shift+P`) and select "Remote-Containers: Reopen in Container".
+
+## Linting & Formatting
+
+This project uses several linters to maintain code quality and consistency:
+
+- **ESLint (`.eslintrc.json`):** For JavaScript code.
+- **Stylelint (`.stylelintrc.json`):** For CSS code.
+- **Markdownlint (`.markdownlint.json`):** For Markdown files (like this README and blog posts).
+  - Uses `markdownlint-cli2`.
+  - Configured with default rules.
+  - Integrated with a **pre-push Git hook** via Husky and lint-staged. Markdown files staged for commit will be linted automatically before you can push.
+
+**Run linters manually:**
+
+```bash
+# Lint CSS & JS
+npm run lint
+
+# Lint all Markdown files
+npx markdownlint-cli2 "**/*.md" "#node_modules"
+
+# Lint specific Markdown file
+npx markdownlint-cli2 src/content/blog/001-about-this-blog.md
+```
+
+(Note: Prettier is included as a VS Code extension but not currently enforced via CLI script).
 
 ## Development Workflow & Conventional Commits
 
@@ -115,7 +154,7 @@ This project uses an automated release process powered by [Semantic Release](htt
 BREAKING CHANGE: User session format changed.` (Results in a MAJOR release)
 4.  **Create Pull Request:** Open a Pull Request against the `main` branch.
 5.  **CI Checks:** The PR workflow will automatically:
-    - Run linters (HTML, CSS, JS).
+    - Run linters (CSS, JS - Markdown is checked by pre-push hook).
     - Build a Docker image tagged as `pr-{PR_NUMBER}`.
     - Push the image to GitHub Container Registry (ghcr.io).
     - Comments on PR with instructions to pull the test image.
@@ -142,7 +181,7 @@ This project uses GitHub Actions for CI/CD with semantic versioning automated by
 
 1.  **PR Workflow (`pr-workflow.yml`)**: Triggered on Pull Requests to `main`.
 
-    - Lints code (fails build on errors).
+    - Lints code (CSS, JS).
     - Builds a container image tagged `pr-{PR_NUMBER}`.
     - Pushes to GitHub Container Registry.
     - Comments on PR with image details.
