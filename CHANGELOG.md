@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/johnburbridge/johnburbridge_com/compare/v1.3.0...v1.3.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* Ignore Astro generated type files ([cff0019](https://github.com/johnburbridge/johnburbridge_com/commit/cff00197ff4d113b1cf1eb19572e3543f66d4b89))
+
 # [1.3.0](https://github.com/johnburbridge/johnburbridge_com/compare/v1.2.0...v1.3.0) (2025-04-10)
 
 
