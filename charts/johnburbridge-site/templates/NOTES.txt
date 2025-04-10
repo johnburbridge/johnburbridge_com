@@ -1,0 +1,43 @@
+Your johnburbridge-site chart has been deployed.
+
+To access your application:
+
+1. Get the application URL by running these commands:
+{{- if .Values.ingress.enabled }}
+  {{- $ingressHosts := .Values.ingress.hosts | default list }}
+  {{- $ingressTlsEnabled := .Values.ingress.tls.enabled | default false }}
+  {{- $ingressTlsSecrets := .Values.ingress.tls.secrets | default list }}
+  
+  {{- if $ingressTlsEnabled }}
+    {{- range $index, $hostInfo := $ingressHosts }}
+      {{- $hostName := $hostInfo.host }}
+      {{- $hasTls := false }}
+      {{- range $tlsSecret := $ingressTlsSecrets }}
+        {{- if has $hostName $tlsSecret.hosts }}
+          {{- $hasTls = true }}
+        {{- end }}
+      {{- end }}
+      {{- if $hasTls }}
+  https://{{ $hostName }}
+      {{- else }}
+  http://{{ $hostName }}
+      {{- end }}
+    {{- end }}
+  {{- else }}
+    {{- range $index, $hostInfo := $ingressHosts }}
+  http://{{ $hostInfo.host }}
+    {{- end }}
+  {{- end }}
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "johnburbridge-site.fullname" . }} --template "{{ range .status.loadBalancer.ingress }}{{ .ip }}{{ end }}")
+  echo "Visit http://${SERVICE_IP}:{{ .Values.service.port }}"
+{{- else if contains "NodePort" .Values.service.type }}
+  export NODE_PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "johnburbridge-site.fullname" . }} --template "{{ range.spec.ports }}{{ if eq .name "http" }}{{ .nodePort }}{{ end }}{{ end }}")
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[?(@.type=='ExternalIP')].address}")
+  echo "Visit http://$NODE_IP:$NODE_PORT"
+{{- else }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "johnburbridge-site.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT={{ .Values.service.port }}
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
