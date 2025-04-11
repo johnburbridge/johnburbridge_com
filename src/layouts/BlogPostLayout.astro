@@ -1,7 +1,8 @@
 ---
 // src/layouts/BlogPostLayout.astro
 import BaseLayout from './BaseLayout.astro';
-// Remove: import mermaid from 'mermaid'; // No longer needed here
+// Import highlight.js theme CSS
+import 'highlight.js/styles/gruvbox-dark.css'; // Changed theme
 
 // The frontmatter defined in the content collection schema is passed via Astro.props.entry.data
 const { title, description, pubDate } = Astro.props.entry.data;
@@ -27,8 +28,6 @@ const { title, description, pubDate } = Astro.props.entry.data;
     <hr class="my-8"/>
     <a href="/blog" class="text-orange-400 hover:text-orange-300">&larr; Back to Blog Index</a>
   </article>
-
-  <!-- Remove the previous script block -->
 
   <!-- Import the client-side Mermaid initialization script -->
   <script src="../scripts/init-mermaid.js"></script>
@@ -65,16 +64,25 @@ const { title, description, pubDate } = Astro.props.entry.data;
     border-radius: 4px;
     font-size: 0.9em;
   }
+  /* Adjust pre styling if needed for highlight.js */
   .prose pre {
-    background-color: var(--medium-bg);
-    padding: 1em;
+    background-color: transparent; /* Let highlight.js theme handle background */
+    padding: 0; /* Let highlight.js theme handle padding */
     border-radius: var(--border-radius);
     overflow-x: auto;
     margin-bottom: 1em;
   }
   .prose pre code {
     background-color: transparent;
-    padding: 0;
+    padding: 0; /* Let highlight.js theme handle padding */
+  }
+  /* Ensure hljs styles apply correctly */
+  .prose pre code.hljs {
+      display: block;
+      overflow-x: auto;
+      padding: 1em; /* Add padding back via hljs class */
+      /* Removed background and color overrides - let theme control */
+      border-radius: var(--border-radius);
   }
   .prose blockquote {
     border-left: 4px solid var(--accent);
