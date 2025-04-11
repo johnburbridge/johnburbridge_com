@@ -1,6 +1,7 @@
 ---
 // src/layouts/BlogPostLayout.astro
 import BaseLayout from './BaseLayout.astro';
+// Remove: import mermaid from 'mermaid'; // No longer needed here
 
 // The frontmatter defined in the content collection schema is passed via Astro.props.entry.data
 const { title, description, pubDate } = Astro.props.entry.data;
@@ -19,17 +20,23 @@ const { title, description, pubDate } = Astro.props.entry.data;
     </p>
     {description && <p class="italic text-gray-300 mt-2">{description}</p>}
     <hr class="my-4"/>
-    
+
     <!-- Rendered Markdown content -->
     <slot />
-    
+
     <hr class="my-8"/>
     <a href="/blog" class="text-orange-400 hover:text-orange-300">&larr; Back to Blog Index</a>
   </article>
+
+  <!-- Remove the previous script block -->
+
+  <!-- Import the client-side Mermaid initialization script -->
+  <script src="../scripts/init-mermaid.js"></script>
+
 </BaseLayout>
 
 <style is:global>
-  /* Simple prose styling for blog content - consider using Tailwind Typography or similar */
+  /* Styles remain the same */
   .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
     margin-top: 1.5em;
     margin-bottom: 0.5em;
