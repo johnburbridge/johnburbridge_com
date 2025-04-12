@@ -19,4 +19,4 @@ version: 0.1.0
 # This is the version number of the application being deployed.
 # This will be automatically updated by semantic-release via package.json
 # Default value before first release.
-appVersion: "0.1.0" # Set initial appVersion
+appVersion: '0.1.0' # Set initial appVersion

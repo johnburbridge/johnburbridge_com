@@ -39,12 +39,12 @@ jobs:
         run: |
           # Parse current version
           IFS='.' read -r major minor patch <<< "$LATEST_TAG"
-          
+
           # Ensure values are treated as integers
           major=${major:-0}
           minor=${minor:-0}
           patch=${patch:-0}
-          
+
           # Bump version based on input
           if [ "${{ github.event.inputs.version_type }}" == "major" ]; then
             major=$((major + 1))
@@ -56,7 +56,7 @@ jobs:
           else
             patch=$((patch + 1))
           fi
-          
+
           # Set new version
           NEW_VERSION="$major.$minor.$patch"
           echo "New version: v${NEW_VERSION}"
@@ -70,7 +70,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add version.txt
           git commit -m "Bump version to $NEW_VERSION"
-          
+
       - name: Create and push tag
         run: |
           git tag -a "v$NEW_VERSION" -m "Version $NEW_VERSION"

@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - '.github/workflows/**'
-      
+
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup actionlint
         run: |
           curl -sL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash -s -- 1.6.25
