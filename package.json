@@ -7,9 +7,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "format": "prettier --write .", // Add a format script
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:js": "eslint 'src/**/*.js'",
-    "lint": "npm run lint:css && npm run lint:js",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"", // Add md lint script
+    "lint": "npm run lint:css && npm run lint:js && npm run lint:md",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -21,11 +23,13 @@
     "@semantic-release/release-notes-generator": "^14.0.3",
     "astro": "^4.11.0",
     "eslint": "^8.56.0",
+    "eslint-config-prettier": "^10.1.2",
     "html-validate": "^8.8.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
     "markdownlint-cli2": "^0.17.2",
     "playwright": "^1.51.1",
+    "prettier": "^3.5.3",
     "rehype-highlight": "^7.0.2",
     "rehype-mermaid": "^3.0.0",
     "rehype-mermaidjs": "^2.0.0",
@@ -34,7 +38,11 @@
     "stylelint-config-standard": "^36.0.0"
   },
   "lint-staged": {
-    "*.md": "markdownlint-cli2"
+    "*.{js,jsx,ts,tsx,json,css,scss,html,yaml,yml}": "prettier --write",
+    "*.md": [
+      "prettier --write",
+      "markdownlint-cli2 --fix" // Add --fix flag to markdownlint if desired
+    ]
   },
   "dependencies": {
     "mermaid": "^11.6.0"
