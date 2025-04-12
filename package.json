@@ -7,10 +7,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "format": "prettier --write .", // Add a format script
+    "format": "prettier --write .",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:js": "eslint 'src/**/*.js'",
-    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"", // Add md lint script
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
     "lint": "npm run lint:css && npm run lint:js && npm run lint:md",
     "prepare": "husky"
   },
@@ -41,7 +41,7 @@
     "*.{js,jsx,ts,tsx,json,css,scss,html,yaml,yml}": "prettier --write",
     "*.md": [
       "prettier --write",
-      "markdownlint-cli2 --fix" // Add --fix flag to markdownlint if desired
+      "markdownlint-cli2 --fix"
     ]
   },
   "dependencies": {
