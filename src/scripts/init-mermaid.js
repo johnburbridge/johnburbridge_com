@@ -12,15 +12,15 @@ mermaid.initialize(config);
 
 // Wait for the DOM to be fully loaded before running Mermaid
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM fully loaded. Running Mermaid...");
+  console.log('DOM fully loaded. Running Mermaid...');
   try {
     mermaid.run({
       nodes: document.querySelectorAll('pre.mermaid'),
     });
-    console.log("Mermaid run completed.");
+    console.log('Mermaid run completed.');
   } catch (error) {
-    console.error("Error running Mermaid:", error);
+    console.error('Error running Mermaid:', error);
   }
 });
 
-console.log("Mermaid script loaded, waiting for DOMContentLoaded."); // Update log
+console.log('Mermaid script loaded, waiting for DOMContentLoaded.'); // Update log
