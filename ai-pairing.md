@@ -59,16 +59,16 @@ This project uses **Semantic Release** driven by **Conventional Commits**. Adher
 2. **Create Branch:** Create a new feature or fix branch from `main` (e.g., `git checkout -b feat/add-contact-form` or `git checkout -b fix/css-alignment`). **Do not commit directly to `main`.**
 3. **Make Changes:** Implement your changes on the branch.
 4. **Commit Changes:** Commit your work using the **Conventional Commits** format. Examples:
-    - `feat: Add new portfolio section` (Minor release)
-    - `fix: Correct navigation link error` (Patch release)
-    - `build: Update Dockerfile build stage`
-    - `ci: Skip docker push when running act`
-    - `docs: Update AI pairing guidelines`
-    - `refactor: Simplify JavaScript logic`
-    - `test: Add unit tests for script.js`
-    - `chore: Update npm dependencies`
-    - `feat!: Implement user login system` (**Breaking Change** -> Major release)
-    - `fix: Resolve critical rendering bug
+   - `feat: Add new portfolio section` (Minor release)
+   - `fix: Correct navigation link error` (Patch release)
+   - `build: Update Dockerfile build stage`
+   - `ci: Skip docker push when running act`
+   - `docs: Update AI pairing guidelines`
+   - `refactor: Simplify JavaScript logic`
+   - `test: Add unit tests for script.js`
+   - `chore: Update npm dependencies`
+   - `feat!: Implement user login system` (**Breaking Change** -> Major release)
+   - `fix: Resolve critical rendering bug
 
 BREAKING CHANGE: Requires updated browser version.`(**Breaking Change** -> Major release)
 5.  **Push Branch:** Push your local branch to the remote (`git push origin your-branch-name`).
@@ -108,6 +108,7 @@ BREAKING CHANGE: Requires updated browser version.`(**Breaking Change** -> Major
 - **Use Container Tools:** Leverage the tools installed within the Dev Container (linters, `gh`, `git`, etc.) when appropriate.
 - **Mind the Context:** Remember you are operating within the Dev Container. Be mindful of file paths and configurations specific to this environment (e.g., the Git signing key path).
 - **File Path Handling Note:** There appears to be an inconsistency in path handling between different file system tools in this environment.
+
   - When _writing_ files (`mcp_filesystem_write_file`), specifying the full host path (e.g., `/Users/jburbridge/Projects/johnburbridge_com/filename.md`) seems necessary.
   - When _reading_ files (`read_file`), using a simple relative path (e.g., `filename.md`) appears to work correctly. Please be aware of this when interacting with files.
 
@@ -117,7 +118,7 @@ BREAKING CHANGE: Requires updated browser version.`(**Breaking Change** -> Major
   3. Commit changes to the branch using Conventional Commits.
   4. Push the branch.
   5. Open a descriptive Pull Request against `main`.
-      _Do not suggest committing or pushing directly to the `main` branch._ Ask the user to merge approved PRs.
+     _Do not suggest committing or pushing directly to the `main` branch._ Ask the user to merge approved PRs.
 
 ---
 
