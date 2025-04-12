@@ -1,63 +1,59 @@
 {
-    "name": "John Burbridge Site Dev Container",
-    "build": {
-        "dockerfile": "Dockerfile",
-        // Use the vscode user created in the Dockerfile
-        "args": {
-            "USERNAME": "vscode"
+  "name": "John Burbridge Site Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    // Use the vscode user created in the Dockerfile
+    "args": {
+      "USERNAME": "vscode"
+    }
+  },
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [
+    8080,
+    4321 // Add Astro default dev port
+  ],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "sudo npm install -g markdownlint-cli2",
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          },
+          "bash": {
+            "path": "/bin/bash",
+            "args": ["-l"]
+          }
         }
-    },
-    // Features to add to the dev container. More info: https://containers.dev/features.
-    // "features": {},
-    // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    "forwardPorts": [
-        8080,
-        4321 // Add Astro default dev port
-    ],
-    // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "sudo npm install -g markdownlint-cli2",
-    // Configure tool-specific properties.
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "zsh",
-                "terminal.integrated.profiles.linux": {
-                    "zsh": {
-                        "path": "/usr/bin/zsh"
-                    },
-                    "bash": {
-                        "path": "/bin/bash",
-                        "args": [
-                            "-l"
-                        ]
-                    }
-                }
-            },
-            "extensions": [
-                "ms-vscode-remote.remote-containers",
-                "ms-azuretools.vscode-docker",
-                "github.vscode-github-actions",
-                "esbenp.prettier-vscode",
-                "dbaeumer.vscode-eslint",
-                "stylelint.vscode-stylelint",
-                "redhat.vscode-yaml",
-                "ms-kubernetes-tools.vscode-kubernetes-tools",
-                "wholroyd.helm",
-                "timonwong.shellcheck",
-                "DavidAnson.vscode-markdownlint" // Added Markdownlint extension
-            ]
-        }
-    },
-    // Mount the Docker socket and Git credentials
-    "mounts": [
-        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached",
-        // Mount git credentials
-        "source=${env:HOME}${env:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
-        "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
-    ],
-    // Run as the non-root user defined in Dockerfile.
-    "remoteUser": "vscode",
-    "runArgs": [
-        "--init"
-    ] // Runs init process for zombie reaping
+      },
+      "extensions": [
+        "ms-vscode-remote.remote-containers",
+        "ms-azuretools.vscode-docker",
+        "github.vscode-github-actions",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "stylelint.vscode-stylelint",
+        "redhat.vscode-yaml",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "wholroyd.helm",
+        "timonwong.shellcheck",
+        "DavidAnson.vscode-markdownlint" // Added Markdownlint extension
+      ]
+    }
+  },
+  // Mount the Docker socket and Git credentials
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached",
+    // Mount git credentials
+    "source=${env:HOME}${env:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+    "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+  ],
+  // Run as the non-root user defined in Dockerfile.
+  "remoteUser": "vscode",
+  "runArgs": ["--init"] // Runs init process for zombie reaping
 }
