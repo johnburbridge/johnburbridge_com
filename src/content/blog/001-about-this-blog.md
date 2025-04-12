@@ -1,9 +1,9 @@
 ---
-title: "About This Blog: Why, What, and How"
-description: "An introductory post explaining the motivation behind starting this blog, the topics it will cover, and the technology choices powering it."
+title: 'About This Blog: Why, What, and How'
+description: 'An introductory post explaining the motivation behind starting this blog, the topics it will cover, and the technology choices powering it.'
 pubDate: 2024-07-26 # Consider updating this date
 # heroImage: '/placeholder-hero.jpg' # Optional: Add a hero image path later
-tags: ["meta", "introduction", "tech", "astro", "docker", "ci/cd"]
+tags: ['meta', 'introduction', 'tech', 'astro', 'docker', 'ci/cd']
 ---
 
 ## Why Start This Blog?
@@ -12,13 +12,13 @@ Welcome! I've been wanting a space to share my thoughts, learnings, and
 experiments in the tech world for a while now. This blog serves several purposes:
 
 1. **Knowledge Sharing:** Documenting what I learn helps solidify my
-    understanding and might be useful to others facing similar challenges.
-    I had a VP at Salesforce.com who often said "Clear writing is clear
-    thinking", which I firmly agree with.
+   understanding and might be useful to others facing similar challenges.
+   I had a VP at Salesforce.com who often said "Clear writing is clear
+   thinking", which I firmly agree with.
 2. **Personal Project:** Building and maintaining this site is a project in
-    itself, allowing me to experiment with new tech and stay sharp.
+   itself, allowing me to experiment with new tech and stay sharp.
 3. **Portfolio Expansion:** It's a living extension of my professional profile,
-    showcasing my interests and technical abilities beyond a static resume.
+   showcasing my interests and technical abilities beyond a static resume.
 
 ## What to Expect?
 
@@ -47,7 +47,7 @@ tech landscape. Expect explorations into areas like:
   'it depends').
 
 Essentially, if it's a technology or practice I'm actively using, learning,
- or currently losing sleep over, there's a good chance it'll show up here.
+or currently losing sleep over, there's a good chance it'll show up here.
 
 ## The Tech Stack "How"
 

@@ -47,22 +47,24 @@ johnburbridge_com/
 
 ### Local Development
 
-1.  **Install dependencies:**
+1. **Install dependencies:**
 
     ```bash
     npm ci
     ```
 
-2.  **Run Astro dev server:**
+2. **Run Astro dev server:**
 
     ```bash
     npm run dev
     ```
+
     This starts the development server, usually at `http://localhost:4321`.
 
-3.  **Lint code:** See [Linting & Formatting](#linting--formatting) section.
+3. **Lint code:** See [Linting & Formatting](#linting--formatting) section.
 
-4.  **Validate workflows (requires Homebrew and act):**
+4. **Validate workflows (requires Homebrew and act):**
+
     ```bash
     # brew install act actionlint
     ./validate-workflows.sh
@@ -106,9 +108,9 @@ This project includes a Dev Container configuration (`.devcontainer/`) for a con
 
 To use the Dev Container:
 
-1.  Ensure you have Docker Desktop running.
-2.  Open this project folder in VS Code/Cursor.
-3.  When prompted, click "Reopen in Container". Alternatively, open the Command Palette (`Cmd/Ctrl+Shift+P`) and select "Remote-Containers: Reopen in Container".
+1. Ensure you have Docker Desktop running.
+2. Open this project folder in VS Code/Cursor.
+3. When prompted, click "Reopen in Container". Alternatively, open the Command Palette (`Cmd/Ctrl+Shift+P`) and select "Remote-Containers: Reopen in Container".
 
 ## Linting & Formatting
 
@@ -140,26 +142,18 @@ npx markdownlint-cli2 src/content/blog/001-about-this-blog.md
 
 This project uses an automated release process powered by [Semantic Release](https://semantic-release.gitbook.io/) and [Conventional Commits](https://www.conventionalcommits.org/).
 
-1.  **Feature Development:** Create a new branch for your feature or fix (`git checkout -b feature/my-new-feature`).
-2.  **Make Changes:** Implement your changes.
-3.  **Commit Changes:** Commit your work using the **Conventional Commits** format. This is crucial for automated versioning.
-    - Examples:
-      - `feat: Add dark mode toggle` (Results in a MINOR release)
-      - `fix: Correct alignment issue on mobile` (Results in a PATCH release)
-      - `perf: Optimize image loading` (Results in a PATCH release)
-      - `docs: Update README with deployment instructions` (No release)
-      - `chore: Update dependencies` (No release)
-      - `feat!: Add user authentication` (Note the `!`. Results in a MAJOR release)
-      - `fix: Solve login bug
+1. **Feature Development:** Create a new branch for your feature or fix (`git checkout -b feature/my-new-feature`).
+2. **Make Changes:** Implement your changes.
+3. **Commit Changes:** Commit your work using the **Conventional Commits** format. This is crucial for automated versioning. - Examples: - `feat: Add dark mode toggle` (Results in a MINOR release) - `fix: Correct alignment issue on mobile` (Results in a PATCH release) - `perf: Optimize image loading` (Results in a PATCH release) - `docs: Update README with deployment instructions` (No release) - `chore: Update dependencies` (No release) - `feat!: Add user authentication` (Note the `!`. Results in a MAJOR release) - `fix: Solve login bug
 BREAKING CHANGE: User session format changed.` (Results in a MAJOR release)
-4.  **Create Pull Request:** Open a Pull Request against the `main` branch.
-5.  **CI Checks:** The PR workflow will automatically:
+4. **Create Pull Request:** Open a Pull Request against the `main` branch.
+5. **CI Checks:** The PR workflow will automatically:
     - Run linters (CSS, JS - Markdown is checked by pre-push hook).
     - Build a Docker image tagged as `pr-{PR_NUMBER}`.
     - Push the image to GitHub Container Registry (ghcr.io).
     - Comments on PR with instructions to pull the test image.
-6.  **Code Review & Merge:** Once the PR is approved and merged into `main`...
-7.  **Automated Release:** The Main workflow triggers:
+6. **Code Review & Merge:** Once the PR is approved and merged into `main`...
+7. **Automated Release:** The Main workflow triggers:
     - `semantic-release` analyzes the conventional commit messages merged since the last release.
     - If release-worthy commits (`feat`, `fix`, `perf`, `!` or `BREAKING CHANGE`) are found:
       - Calculates the next semantic version (e.g., `1.2.3`).
@@ -179,36 +173,36 @@ BREAKING CHANGE: User session format changed.` (Results in a MAJOR release)
 
 This project uses GitHub Actions for CI/CD with semantic versioning automated by Semantic Release:
 
-1.  **PR Workflow (`pr-workflow.yml`)**: Triggered on Pull Requests to `main`.
+1. **PR Workflow (`pr-workflow.yml`)**: Triggered on Pull Requests to `main`.
 
     - Lints code (CSS, JS).
     - Builds a container image tagged `pr-{PR_NUMBER}`.
     - Pushes to GitHub Container Registry.
     - Comments on PR with image details.
 
-2.  **Release Workflow (`main-workflow.yml`)**: Triggered on pushes to `main`.
+2. **Release Workflow (`main-workflow.yml`)**: Triggered on pushes to `main`.
 
     - Runs `semantic-release` to analyze commits, bump version, generate changelog, commit changes, create Git tag, and create GitHub Release (if applicable).
     - If a new release was created, retags the corresponding `pr-{PR_NUMBER}` image as the new semantic version (e.g., `1.2.3`) and `latest`, pushing them to GitHub Container Registry.
 
-3.  **Validation Workflow (`validate.yml`)**: Triggered on pushes affecting `.github/workflows/**` (except on `main`).
+3. **Validation Workflow (`validate.yml`)**: Triggered on pushes affecting `.github/workflows/**` (except on `main`).
     - Validates workflow files with `actionlint`.
 
 ## Running Locally with Docker
 
-1.  Build the Docker image:
+1. Build the Docker image:
 
     ```bash
     docker build -t johnburbridge-site .
     ```
 
-2.  Run the container:
+2. Run the container:
 
     ```bash
     docker run -d -p 8080:8080 johnburbridge-site
     ```
 
-3.  Access the website at `http://localhost:8080`
+3. Access the website at `http://localhost:8080`
 
 ## Production Deployment
 
