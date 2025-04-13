@@ -6,7 +6,8 @@ pubDate: 2025-04-10 # Use YYYY-MM-DD format
 
 ## Welcome to the Blog
 
-This is the body of my **first blog post**. I'm using Astro's [Content Collections](https://docs.astro.build/en/guides/content-collections/) feature.
+This is the body of my **first blog post**. I'm using Astro's
+[Content Collections](https://docs.astro.build/en/guides/content-collections/) feature.
 
 Here's a list:
 
@@ -121,7 +122,6 @@ Testing syntax highlighting:
    }
    ```
 
-And here's a link:
-[Visit Astro Docs](https://docs.astro.build/)
+And here's a link: [Visit Astro Docs](https://docs.astro.build/)
 
 We can add more content here later.

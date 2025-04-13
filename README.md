@@ -6,11 +6,12 @@
 
 ## Overview
 
-This repository contains the personal website for John Burbridge, a DevEx Engineering Consultant and founder of Spiral House.
+This repository contains the personal website for John Burbridge, a DevEx Engineering Consultant and founder of Spiral
+House.
 
 ## Project Structure
 
-```
+```text
 johnburbridge_com/
 ├── .devcontainer/         # VS Code Dev Container configuration
 ├── .github/workflows/     # GitHub Actions workflows
@@ -74,7 +75,8 @@ johnburbridge_com/
 
 ### Dev Container
 
-This project includes a Dev Container configuration (`.devcontainer/`) for a consistent development environment using VS Code/Cursor Remote Containers or GitHub Codespaces.
+This project includes a Dev Container configuration (`.devcontainer/`) for a consistent development environment using VS
+Code/Cursor Remote Containers or GitHub Codespaces.
 
 **Key Features & Tools:**
 
@@ -110,7 +112,8 @@ To use the Dev Container:
 
 1. Ensure you have Docker Desktop running.
 2. Open this project folder in VS Code/Cursor.
-3. When prompted, click "Reopen in Container". Alternatively, open the Command Palette (`Cmd/Ctrl+Shift+P`) and select "Remote-Containers: Reopen in Container".
+3. When prompted, click "Reopen in Container". Alternatively, open the Command Palette (`Cmd/Ctrl+Shift+P`) and select
+   "Remote-Containers: Reopen in Container".
 
 ## Linting & Formatting
 
@@ -121,7 +124,8 @@ This project uses several linters to maintain code quality and consistency:
 - **Markdownlint (`.markdownlint.json`):** For Markdown files (like this README and blog posts).
   - Uses `markdownlint-cli2`.
   - Configured with default rules.
-  - Integrated with a **pre-push Git hook** via Husky and lint-staged. Markdown files staged for commit will be linted automatically before you can push.
+  - Integrated with a **pre-push Git hook** via Husky and lint-staged. Markdown files staged for commit will be linted
+    automatically before you can push.
 
 **Run linters manually:**
 
@@ -140,12 +144,17 @@ npx markdownlint-cli2 src/content/blog/001-about-this-blog.md
 
 ## Development Workflow & Conventional Commits
 
-This project uses an automated release process powered by [Semantic Release](https://semantic-release.gitbook.io/) and [Conventional Commits](https://www.conventionalcommits.org/).
+This project uses an automated release process powered by [Semantic Release](https://semantic-release.gitbook.io/) and
+[Conventional Commits](https://www.conventionalcommits.org/).
 
 1. **Feature Development:** Create a new branch for your feature or fix (`git checkout -b feature/my-new-feature`).
 2. **Make Changes:** Implement your changes.
-3. **Commit Changes:** Commit your work using the **Conventional Commits** format. This is crucial for automated versioning. - Examples: - `feat: Add dark mode toggle` (Results in a MINOR release) - `fix: Correct alignment issue on mobile` (Results in a PATCH release) - `perf: Optimize image loading` (Results in a PATCH release) - `docs: Update README with deployment instructions` (No release) - `chore: Update dependencies` (No release) - `feat!: Add user authentication` (Note the `!`. Results in a MAJOR release) - `fix: Solve login bug
-BREAKING CHANGE: User session format changed.` (Results in a MAJOR release)
+3. **Commit Changes:** Commit your work using the **Conventional Commits** format. This is crucial for automated
+   versioning. - Examples: - `feat: Add dark mode toggle` (Results in a MINOR release) -
+   `fix: Correct alignment issue on mobile` (Results in a PATCH release) - `perf: Optimize image loading` (Results in a
+   PATCH release) - `docs: Update README with deployment instructions` (No release) - `chore: Update dependencies` (No
+   release) - `feat!: Add user authentication` (Note the `!`. Results in a MAJOR release) -
+   `fix: Solve login bug BREAKING CHANGE: User session format changed.` (Results in a MAJOR release)
 4. **Create Pull Request:** Open a Pull Request against the `main` branch.
 5. **CI Checks:** The PR workflow will automatically:
    - Run linters (CSS, JS - Markdown is checked by pre-push hook).
@@ -167,7 +176,8 @@ BREAKING CHANGE: User session format changed.` (Results in a MAJOR release)
      - Pushes the release tags to ghcr.io.
    - If no release-worthy commits are found, no release occurs.
 
-**Key Takeaway:** Use Conventional Commit messages when committing code that will be merged into `main`. This drives the entire automated release process.
+**Key Takeaway:** Use Conventional Commit messages when committing code that will be merged into `main`. This drives the
+entire automated release process.
 
 ## CI/CD Pipeline (Summary)
 
@@ -182,8 +192,10 @@ This project uses GitHub Actions for CI/CD with semantic versioning automated by
 
 2. **Release Workflow (`main-workflow.yml`)**: Triggered on pushes to `main`.
 
-   - Runs `semantic-release` to analyze commits, bump version, generate changelog, commit changes, create Git tag, and create GitHub Release (if applicable).
-   - If a new release was created, retags the corresponding `pr-{PR_NUMBER}` image as the new semantic version (e.g., `1.2.3`) and `latest`, pushing them to GitHub Container Registry.
+   - Runs `semantic-release` to analyze commits, bump version, generate changelog, commit changes, create Git tag, and
+     create GitHub Release (if applicable).
+   - If a new release was created, retags the corresponding `pr-{PR_NUMBER}` image as the new semantic version (e.g.,
+     `1.2.3`) and `latest`, pushing them to GitHub Container Registry.
 
 3. **Validation Workflow (`validate.yml`)**: Triggered on pushes affecting `.github/workflows/**` (except on `main`).
    - Validates workflow files with `actionlint`.
@@ -206,7 +218,8 @@ This project uses GitHub Actions for CI/CD with semantic versioning automated by
 
 ## Production Deployment
 
-The container is published to GitHub Container Registry (`ghcr.io/johnburbridge/johnburbridge-site`) with semantic version tags created automatically by the CI/CD pipeline. Use these tags for deployment:
+The container is published to GitHub Container Registry (`ghcr.io/johnburbridge/johnburbridge-site`) with semantic
+version tags created automatically by the CI/CD pipeline. Use these tags for deployment:
 
 ```bash
 # Using the stable latest version (points to the most recent release)

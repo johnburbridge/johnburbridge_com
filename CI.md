@@ -1,6 +1,7 @@
 # CI/CD Workflow Documentation
 
-This document describes the Continuous Integration and Continuous Deployment (CI/CD) workflows for the johnburbridge.com website.
+This document describes the Continuous Integration and Continuous Deployment (CI/CD) workflows for the johnburbridge.com
+website.
 
 ## Workflow Overview
 
@@ -65,7 +66,8 @@ flowchart TB
 
 ## Version Tagging Process
 
-The version tagging process is independent of the pull request and merge flow. It's manually triggered to create a new semantic version.
+The version tagging process is independent of the pull request and merge flow. It's manually triggered to create a new
+semantic version.
 
 ```mermaid
 flowchart TB
@@ -184,8 +186,7 @@ The system follows Semantic Versioning (SemVer) conventions:
 
 ## Image Registry
 
-All Docker images are stored in GitHub Container Registry (ghcr.io) under:
-`ghcr.io/johnburbridge/johnburbridge-site`
+All Docker images are stored in GitHub Container Registry (ghcr.io) under: `ghcr.io/johnburbridge/johnburbridge-site`
 
 ## Important Notes
 

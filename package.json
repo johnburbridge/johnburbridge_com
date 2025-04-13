@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:js": "eslint 'src/**/*.js'",
-    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "lint:md": "markdownlint \"**/*.md\"",
     "lint": "npm run lint:css && npm run lint:js && npm run lint:md",
     "prepare": "husky"
   },
@@ -27,7 +27,8 @@
     "html-validate": "^8.8.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
-    "markdownlint-cli2": "^0.17.2",
+    "markdownlint": "^0.37.4",
+    "markdownlint-cli": "^0.44.0",
     "playwright": "^1.51.1",
     "prettier": "^3.5.3",
     "rehype-highlight": "^7.0.2",
@@ -41,7 +42,7 @@
     "*.{js,jsx,ts,tsx,json,css,scss,html,yaml,yml}": "prettier --write",
     "*.md": [
       "prettier --write",
-      "markdownlint-cli2 --fix"
+      "markdownlint --fix"
     ]
   },
   "dependencies": {

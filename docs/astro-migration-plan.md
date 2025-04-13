@@ -1,8 +1,10 @@
 # Astro Migration Plan for johnburbridge.com
 
-This document outlines the steps required to migrate the existing static HTML site to use the Astro Static Site Generator (SSG) to enable blog functionality.
+This document outlines the steps required to migrate the existing static HTML site to use the Astro Static Site
+Generator (SSG) to enable blog functionality.
 
-**Goal:** Re-architect the site using Astro while preserving existing content and appearance, setting the stage for adding a blog.
+**Goal:** Re-architect the site using Astro while preserving existing content and appearance, setting the stage for
+adding a blog.
 
 **Branch:** `feat/blog` (or a dedicated migration branch)
 
@@ -39,7 +41,8 @@ This document outlines the steps required to migrate the existing static HTML si
 4. **Create Base Layout (`src/layouts/BaseLayout.astro`):**
 
    - [ ] Create `src/layouts/BaseLayout.astro`.
-   - [ ] Move the core HTML structure ( `<html>`, `<head>`, `<body>` tags, links to CSS/JS, meta tags) from `site/index.html` into this layout.
+   - [ ] Move the core HTML structure ( `<html>`, `<head>`, `<body>` tags, links to CSS/JS, meta tags) from
+         `site/index.html` into this layout.
    - [ ] Use Astro's `<slot />` element where the main page content should go.
    - [ ] Import and reference `global.css` (see Step 6).
    - Example structure:
@@ -69,7 +72,8 @@ This document outlines the steps required to migrate the existing static HTML si
 
    - [ ] Create `src/pages/index.astro`.
    - [ ] Use the `BaseLayout` created in Step 4.
-   - [ ] Move the content _within_ the `<body>` tag from `site/index.html` into this file, wrapping it with the layout component.
+   - [ ] Move the content _within_ the `<body>` tag from `site/index.html` into this file, wrapping it with the layout
+         component.
    - Example:
 
      ```astro
@@ -88,18 +92,23 @@ This document outlines the steps required to migrate the existing static HTML si
 
    - [ ] Create `src/styles/global.css`.
    - [ ] Move the content from `site/styles.css` into this file.
-   - [ ] Ensure `BaseLayout.astro` imports or links to this CSS correctly. Astro can handle CSS bundling/processing if imported.
+   - [ ] Ensure `BaseLayout.astro` imports or links to this CSS correctly. Astro can handle CSS bundling/processing if
+         imported.
 
 7. **Migrate JavaScript (`src/scripts/script.js` or `public/script.js`):**
 
    - [ ] Move `site/script.js`.
-   - [ ] **Option A (If needs bundling/processing):** Move to `src/scripts/script.js`. Import it within `<script>` tags in `BaseLayout.astro`.
-   - [ ] **Option B (If plain JS, no processing needed):** Move to `public/script.js`. Link to it via `<script src="/script.js"></script>` in `BaseLayout.astro`. (Let's start with Option B for simplicity unless bundling becomes necessary).
+   - [ ] **Option A (If needs bundling/processing):** Move to `src/scripts/script.js`. Import it within `<script>` tags
+         in `BaseLayout.astro`.
+   - [ ] **Option B (If plain JS, no processing needed):** Move to `public/script.js`. Link to it via
+         `<script src="/script.js"></script>` in `BaseLayout.astro`. (Let's start with Option B for simplicity unless
+         bundling becomes necessary).
 
 8. **Migrate Static Assets (`public/`):**
 
    - [ ] Move `site/profile.jpeg` to `public/profile.jpeg`.
-   - [ ] Update the `<img>` tag src in `src/pages/index.astro` to point to `/profile.jpeg` (paths in `public` are served from the root).
+   - [ ] Update the `<img>` tag src in `src/pages/index.astro` to point to `/profile.jpeg` (paths in `public` are served
+         from the root).
    - [ ] Move any other static assets (favicons, etc.) from `site/` to `public/`.
 
 9. **Update `package.json` Scripts:**
@@ -109,7 +118,8 @@ This document outlines the steps required to migrate the existing static HTML si
    - [ ] Modify `"lint"` script:
      - Remove `lint:html` (Astro handles HTML generation).
      - Update `lint:css` path to `src/**/*.css`.
-     - Update `lint:js` path to `src/**/*.js` (or adjust if JS is in `public`). Consider adding Astro ESLint integration later.
+     - Update `lint:js` path to `src/**/*.js` (or adjust if JS is in `public`). Consider adding Astro ESLint integration
+       later.
 
 10. **Clean Up Old Structure:**
 
@@ -127,21 +137,25 @@ This document outlines the steps required to migrate the existing static HTML si
 1. **Test Build:**
 
    - [ ] Run `npm run build`.
-   - [ ] Verify static files are generated in the `dist/` directory. Inspect `dist/index.html` to ensure it contains the expected content.
+   - [ ] Verify static files are generated in the `dist/` directory. Inspect `dist/index.html` to ensure it contains the
+         expected content.
 
 2. **Update `Dockerfile`:**
 
    - [ ] Add `RUN npm run build` _after_ `npm ci` and _before_ any `COPY` commands that expect the final site files.
-   - [ ] Update the Nginx configuration (`config/nginx.conf`) or `COPY` command in `Dockerfile` to serve files from the `./dist` directory instead of `./site`. (Requires analyzing the current `Dockerfile` and `nginx.conf`).
+   - [ ] Update the Nginx configuration (`config/nginx.conf`) or `COPY` command in `Dockerfile` to serve files from the
+         `./dist` directory instead of `./site`. (Requires analyzing the current `Dockerfile` and `nginx.conf`).
 
 3. **Update GitHub Actions (`.github/workflows/*.yml`):**
 
    - [ ] In `pr-workflow.yml`, add `npm run build` before the `docker build` step.
-   - [ ] In `main-workflow.yml`, add `npm run build` before the `docker build` step (or before the step where the image is pulled/retagged if relying on PR build artifact).
+   - [ ] In `main-workflow.yml`, add `npm run build` before the `docker build` step (or before the step where the image
+         is pulled/retagged if relying on PR build artifact).
 
 4. **Testing CI/CD:**
    - [ ] Push changes to the branch.
-   - [ ] Create a draft PR to test `pr-workflow.yml`. Verify the build step runs and the Docker image is built using the `dist/` content.
+   - [ ] Create a draft PR to test `pr-workflow.yml`. Verify the build step runs and the Docker image is built using the
+         `dist/` content.
    - [ ] (Later) Merge to test `main-workflow.yml`.
 
 ## Phase 3: Blog Implementation (High-Level)
@@ -149,7 +163,8 @@ This document outlines the steps required to migrate the existing static HTML si
 **Objective:** Set up the core structure for the blog.
 
 1. **Configure Content Collections:**
-   - [ ] Define a "blog" collection in `src/content/config.ts` (requires installing `@astrojs/markdown-remark` or similar). Define schema (title, description, pubDate, body, links).
+   - [ ] Define a "blog" collection in `src/content/config.ts` (requires installing `@astrojs/markdown-remark` or
+         similar). Define schema (title, description, pubDate, body, links).
 2. **Create Blog Posts:**
    - [ ] Create `src/content/blog/` directory.
    - [ ] Add sample blog posts as Markdown files (`.md`) with frontmatter matching the schema.

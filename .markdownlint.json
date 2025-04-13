@@ -1,9 +1,7 @@
 {
   "default": true,
-  "rules": {
-    "MD013": {
-      "line_length": 120
-    },
-    "MD012": false // Disable no-multiple-blanks rule
-  }
+  "MD013": {
+    "line_length": 120
+  },
+  "MD012": false
 }
