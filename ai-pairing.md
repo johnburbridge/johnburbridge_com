@@ -77,15 +77,15 @@ This project uses **Semantic Release** driven by **Conventional Commits**. Adher
    - `test: Add unit tests for script.js`
    - `chore: Update npm dependencies`
    - `feat!: Implement user login system` (**Breaking Change** -> Major release)
-   - `fix: Resolve critical rendering bug4 BREAKING CHANGE: Requires updated browser version. `(**Breaking Change** ->
-     Major release)`
+   - `fix!: Resolve critical rendering bug4` (**Breaking Change** -> Major release)
 5. **Push Branch:** Push your local branch to the remote (`git push origin your-branch-name`).
-6. **Create Pull Request:** Use the GitHub UI or the`gh pr create` command to open a Pull Request from your branch
-   against the `main` branch. Provide a descriptive title and body. 7. **CI Checks:** The PR workflow will automatically
-   run linters and build/validate the Docker image. 8. **Code Review & Merge:** Once the PR passes CI checks and is
-   approved, merge it into `main` using the GitHub UI (typically using a **Squash and Merge** or **Rebase and Merge**
-   strategy). 9. **Automated Release:** Merging to `main` triggers the release workflow, which handles version bumping,
-   changelog generation, tagging, and publishing based on the Conventional Commits in the merged PR.
+6. **Create Pull Request:** Use the GitHub UI or the`gh pr create` command tos open a Pull Request from your branch
+   against the `main` branch. Provide a descriptive title and body.
+7. **CI Checks:** The PR workflow will automatically run linters and build/validate the Docker image. 8. **Code Review &
+   Merge:** Once the PR passes CI checks and is approved, merge it into `main` using the GitHub UI (typically using a
+   **Squash and Merge** or **Rebase and Merge** strategy). 9. **Automated Release:** Merging to `main` triggers the
+   release workflow, which handles version bumping, changelog generation, tagging, and publishing based on the
+   Conventional Commits in the merged PR.
 
 ## CI/CD Overview (GitHub Actions)
 
